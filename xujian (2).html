@@ -1,0 +1,1345 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1.0" />
+<title>续见 · 高考英语读后续写伴学智能体</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@400;600;700;900&family=Noto+Sans+SC:wght@300;400;500;700&family=DM+Serif+Display&display=swap" rel="stylesheet">
+<script src="https://cdn.tailwindcss.com"></script>
+<style>
+  :root {
+    --paper: #faf6ee;
+    --paper-2: #f3ecdc;
+    --ink: #1a1d24;
+    --ink-soft: #3a3f4a;
+    --ink-muted: #6b6258;
+    --vermillion: #c63d2f;       /* 朱砂红 */
+    --vermillion-deep: #a02b1f;
+    --navy: #1d3557;
+    --jade: #4a7c59;
+    --gold: #b8893a;
+    --rule: #d9cdb1;
+  }
+  * { -webkit-font-smoothing: antialiased; }
+  html, body { background: var(--paper); color: var(--ink); }
+  body {
+    font-family: 'Noto Sans SC', -apple-system, "PingFang SC", "Microsoft YaHei", sans-serif;
+    background-image:
+      radial-gradient(ellipse at 20% 0%, rgba(198,61,47,.04) 0%, transparent 50%),
+      radial-gradient(ellipse at 80% 100%, rgba(29,53,87,.04) 0%, transparent 50%);
+    min-height: 100vh;
+  }
+  .font-serif-cn { font-family: 'Noto Serif SC', "Songti SC", "STSong", serif; }
+  .font-display { font-family: 'DM Serif Display', 'Noto Serif SC', serif; }
+  
+  .seal {
+    display: inline-flex; align-items: center; justify-content: center;
+    width: 56px; height: 56px;
+    background: var(--vermillion);
+    color: var(--paper);
+    font-family: 'Noto Serif SC', serif;
+    font-weight: 900;
+    font-size: 22px;
+    border-radius: 6px;
+    box-shadow: 
+      inset 0 0 0 2px var(--paper),
+      inset 0 0 0 4px var(--vermillion),
+      0 2px 0 rgba(0,0,0,.08);
+    letter-spacing: -2px;
+    transform: rotate(-3deg);
+    flex-shrink: 0;
+  }
+  
+  .paper-card {
+    background: white;
+    border: 1px solid var(--rule);
+    border-radius: 4px;
+    box-shadow: 
+      0 1px 0 rgba(0,0,0,.02),
+      0 4px 12px rgba(60, 40, 20, .04);
+  }
+  .paper-card-hover:hover {
+    box-shadow: 
+      0 1px 0 rgba(0,0,0,.02),
+      0 8px 24px rgba(60, 40, 20, .08);
+  }
+  
+  .rule-line {
+    height: 1px;
+    background: linear-gradient(to right, transparent, var(--rule) 20%, var(--rule) 80%, transparent);
+  }
+  
+  .tab-btn {
+    position: relative;
+    background: transparent;
+    color: var(--ink-muted);
+    transition: all .25s;
+  }
+  .tab-btn:hover { color: var(--ink); }
+  .tab-btn.active {
+    color: var(--vermillion);
+    background: var(--paper-2);
+  }
+  .tab-btn.active::after {
+    content: '';
+    position: absolute;
+    bottom: -1px; left: 50%;
+    transform: translateX(-50%);
+    width: 36px; height: 2px;
+    background: var(--vermillion);
+  }
+  
+  .btn-primary {
+    background: var(--vermillion);
+    color: white;
+    transition: all .2s;
+    box-shadow: 0 1px 0 var(--vermillion-deep), 0 2px 8px rgba(198,61,47,.2);
+  }
+  .btn-primary:hover { background: var(--vermillion-deep); transform: translateY(-1px); }
+  .btn-primary:disabled { background: #c4baa8; cursor: not-allowed; box-shadow: none; transform: none; }
+  
+  .btn-ghost {
+    background: transparent;
+    color: var(--ink-soft);
+    border: 1px solid var(--rule);
+    transition: all .2s;
+  }
+  .btn-ghost:hover { background: var(--paper-2); border-color: var(--ink-muted); }
+  
+  .input-paper {
+    background: var(--paper);
+    border: 1px solid var(--rule);
+    border-radius: 4px;
+    padding: 12px 14px;
+    color: var(--ink);
+    font-size: 14px;
+    line-height: 1.7;
+    transition: all .15s;
+    width: 100%;
+  }
+  .input-paper:focus {
+    outline: none;
+    border-color: var(--vermillion);
+    background: white;
+    box-shadow: 0 0 0 3px rgba(198,61,47,.08);
+  }
+  
+  textarea.input-paper { font-family: inherit; resize: vertical; }
+  
+  .badge {
+    display: inline-block;
+    padding: 2px 10px;
+    border-radius: 2px;
+    font-size: 11px;
+    font-weight: 500;
+    letter-spacing: .5px;
+  }
+  .badge-vermillion { background: rgba(198,61,47,.1); color: var(--vermillion-deep); }
+  .badge-navy { background: rgba(29,53,87,.08); color: var(--navy); }
+  .badge-jade { background: rgba(74,124,89,.1); color: var(--jade); }
+  .badge-gold { background: rgba(184,137,58,.12); color: #8a6322; }
+  
+  .ai-thinking::after {
+    display: inline-block;
+    content: '⋯';
+    animation: blink 1.4s infinite;
+    margin-left: 4px;
+  }
+  @keyframes blink { 0%, 50%, 100% { opacity: 1; } 25%, 75% { opacity: .3; } }
+  
+  .markdown-output { color: var(--ink-soft); line-height: 1.8; font-size: 14.5px; }
+  .markdown-output strong { color: var(--ink); font-weight: 600; }
+  .markdown-output em { color: var(--vermillion-deep); font-style: italic; }
+  .markdown-output code {
+    background: var(--paper-2);
+    padding: 2px 6px;
+    border-radius: 2px;
+    font-size: .92em;
+    color: var(--vermillion-deep);
+    font-family: ui-monospace, monospace;
+  }
+  .markdown-output ol, .markdown-output ul { padding-left: 1.5rem; margin: .5rem 0; }
+  .markdown-output ol > li { margin-bottom: .75rem; padding-left: 4px; }
+  .markdown-output ol { list-style: none; counter-reset: q; }
+  .markdown-output ol > li::before {
+    counter-increment: q;
+    content: counter(q);
+    display: inline-block;
+    width: 22px; height: 22px;
+    line-height: 22px; text-align: center;
+    background: var(--vermillion);
+    color: white;
+    border-radius: 50%;
+    font-size: 12px; font-weight: 600;
+    margin-right: 10px;
+    vertical-align: 1px;
+    margin-left: -28px;
+  }
+  .markdown-output ul > li { margin-bottom: .35rem; }
+  .markdown-output ul > li::marker { color: var(--vermillion); }
+  .markdown-output p { margin: .6rem 0; }
+  .markdown-output h3 { color: var(--ink); font-weight: 600; font-size: 16px; margin: 1rem 0 .5rem; }
+  
+  .score-wrap { display: flex; flex-direction: column; gap: 12px; }
+  .score-row { display: grid; grid-template-columns: 110px 1fr 60px; align-items: center; gap: 14px; }
+  .score-label { font-size: 13px; color: var(--ink-soft); font-weight: 500; }
+  .score-track {
+    height: 10px;
+    background: var(--paper-2);
+    border-radius: 5px;
+    overflow: hidden;
+    position: relative;
+  }
+  .score-fill {
+    height: 100%;
+    background: linear-gradient(to right, var(--vermillion), #d96150);
+    border-radius: 5px;
+    transition: width 1.2s cubic-bezier(.2,.8,.2,1);
+    width: 0;
+  }
+  .score-fill.tier-good { background: linear-gradient(to right, var(--jade), #6ba07e); }
+  .score-fill.tier-ok { background: linear-gradient(to right, var(--gold), #d4a04a); }
+  .score-fill.tier-low { background: linear-gradient(to right, #b94e3f, #d36a5a); }
+  .score-num {
+    font-family: 'DM Serif Display', serif;
+    font-size: 20px;
+    color: var(--ink);
+    text-align: right;
+  }
+  
+  .total-score-block {
+    background: var(--paper-2);
+    border-left: 3px solid var(--vermillion);
+    padding: 16px 20px;
+    border-radius: 0 4px 4px 0;
+    display: flex; align-items: baseline; gap: 16px; justify-content: space-between;
+  }
+  .total-score-num {
+    font-family: 'DM Serif Display', serif;
+    font-size: 56px;
+    line-height: 1;
+    color: var(--vermillion);
+  }
+  .total-score-suffix { font-size: 16px; color: var(--ink-muted); }
+  
+  .issue-card {
+    border: 1px solid var(--rule);
+    border-left: 3px solid var(--vermillion);
+    background: white;
+    padding: 14px 16px;
+    border-radius: 0 4px 4px 0;
+    margin-bottom: 10px;
+  }
+  .issue-card.dim-rapport { border-left-color: var(--vermillion); }
+  .issue-card.dim-richness { border-left-color: var(--gold); }
+  .issue-card.dim-accuracy { border-left-color: var(--navy); }
+  .issue-card.dim-coherence { border-left-color: var(--jade); }
+  
+  .strength-card {
+    background: rgba(74,124,89,.06);
+    border: 1px solid rgba(74,124,89,.2);
+    padding: 10px 14px;
+    border-radius: 4px;
+    color: var(--jade);
+    font-size: 13.5px;
+    margin-bottom: 6px;
+  }
+  
+  .modal-backdrop {
+    background: rgba(26, 29, 36, 0.5);
+    backdrop-filter: blur(4px);
+  }
+  
+  /* fade-in for revealed sections */
+  .reveal { animation: reveal .5s ease-out; }
+  @keyframes reveal {
+    from { opacity: 0; transform: translateY(8px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+  
+  .section-num {
+    font-family: 'DM Serif Display', serif;
+    font-size: 14px;
+    color: var(--vermillion);
+    letter-spacing: 2px;
+  }
+  
+  .header-wave {
+    position: absolute;
+    bottom: -1px; left: 0; right: 0;
+    height: 12px;
+    background-image: 
+      radial-gradient(ellipse 12px 6px at 6px 0, var(--paper) 50%, transparent 51%);
+    background-size: 12px 12px;
+    background-repeat: repeat-x;
+  }
+  
+  details summary { cursor: pointer; user-select: none; }
+  details summary::-webkit-details-marker { display: none; }
+  details summary::before {
+    content: '▸';
+    display: inline-block;
+    margin-right: 8px;
+    transition: transform .2s;
+    color: var(--vermillion);
+  }
+  details[open] summary::before { transform: rotate(90deg); }
+  
+  /* tabular numbers for scores */
+  .tnum { font-variant-numeric: tabular-nums; }
+  
+  /* hide scrollbar but allow scroll */
+  .scroll-soft::-webkit-scrollbar { width: 6px; height: 6px; }
+  .scroll-soft::-webkit-scrollbar-thumb { background: var(--rule); border-radius: 3px; }
+  
+  /* utility */
+  .hidden { display: none !important; }
+</style>
+</head>
+<body>
+
+<!-- ========== HEADER ========== -->
+<header class="relative" style="background: linear-gradient(180deg, #fff 0%, var(--paper) 100%); border-bottom: 1px solid var(--rule);">
+  <div class="max-w-6xl mx-auto px-6 pt-7 pb-6">
+    <div class="flex items-center justify-between">
+      <div class="flex items-center gap-5">
+        <div class="seal">续见</div>
+        <div>
+          <div class="flex items-baseline gap-3">
+            <h1 class="font-serif-cn text-3xl font-bold tracking-wide" style="color:var(--ink);">续 见</h1>
+            <span class="text-xs tnum" style="color:var(--ink-muted);">XÙ JIÀN · v0.9</span>
+          </div>
+          <p class="text-sm font-serif-cn mt-1" style="color:var(--ink-muted);">
+            基于高考评分标准的高中英语读后续写伴学智能体
+          </p>
+        </div>
+      </div>
+      <div class="flex items-center gap-3">
+        <span id="api-indicator" class="text-xs hidden" style="color:var(--jade);">● 已接入 DeepSeek</span>
+        <button onclick="openSettings()" class="btn-ghost px-4 py-2 rounded text-sm flex items-center gap-2">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
+          配置
+        </button>
+      </div>
+    </div>
+  </div>
+</header>
+
+<!-- ========== TAB NAV ========== -->
+<div class="sticky top-0 z-20" style="background: rgba(250,246,238,0.92); backdrop-filter: blur(8px); border-bottom: 1px solid var(--rule);">
+  <div class="max-w-6xl mx-auto px-6">
+    <nav class="flex">
+      <button class="tab-btn active px-6 py-4 text-sm font-medium" data-tab="1">
+        <span class="font-serif-cn">①</span> &nbsp;写前引导
+      </button>
+      <button class="tab-btn px-6 py-4 text-sm font-medium" data-tab="2">
+        <span class="font-serif-cn">②</span> &nbsp;写后诊断
+      </button>
+      <button class="tab-btn px-6 py-4 text-sm font-medium" data-tab="3">
+        <span class="font-serif-cn">③</span> &nbsp;自主改稿
+      </button>
+      <button class="tab-btn px-6 py-4 text-sm font-medium ml-auto" data-tab="4">
+        关于本工具
+      </button>
+    </nav>
+  </div>
+</div>
+
+<!-- ========== MAIN ========== -->
+<main class="max-w-6xl mx-auto px-6 py-10">
+
+<!-- =========== TAB 1 写前引导 =========== -->
+<section id="tab-1" class="tab-content">
+  <div class="mb-7">
+    <span class="section-num">— STEP 01 —</span>
+    <h2 class="font-serif-cn text-2xl font-bold mt-2" style="color:var(--ink);">触发构思,而非代笔</h2>
+    <p class="text-sm mt-2 font-serif-cn" style="color:var(--ink-muted); max-width: 640px;">
+      智能体阅读你提供的原文与段落首句后,会通过 5–7 个结构化追问引导你完成情节、情绪、伏笔与细节的构思。<strong style="color:var(--vermillion-deep);">全程不会输出任何完整英文续写句子</strong>,这是写作能力培养的伦理边界。
+    </p>
+  </div>
+
+  <div class="grid grid-cols-1 lg:grid-cols-2 gap-5 mb-5">
+    <div class="paper-card p-5">
+      <div class="flex items-center justify-between mb-3">
+        <label class="text-sm font-semibold" style="color:var(--ink);">原文(Reading Material)</label>
+        <span class="badge badge-navy">2024 新高考I/II卷</span>
+      </div>
+      <textarea id="passage" rows="14" class="input-paper text-[13px] leading-[1.75] scroll-soft"></textarea>
+    </div>
+
+    <div class="paper-card p-5">
+      <div class="flex items-center justify-between mb-3">
+        <label class="text-sm font-semibold" style="color:var(--ink);">段落首句(Paragraph Openers)</label>
+        <span class="badge badge-vermillion">必读</span>
+      </div>
+      <textarea id="openers" rows="6" class="input-paper text-[13px] leading-[1.75]"></textarea>
+      <div class="rule-line my-4"></div>
+      <div>
+        <label class="text-sm font-semibold block mb-2" style="color:var(--ink);">学段 / 年级</label>
+        <select id="grade-level" class="input-paper text-sm">
+          <option value="高二">高二(默认)</option>
+          <option value="高三">高三</option>
+          <option value="高一">高一</option>
+        </select>
+      </div>
+    </div>
+  </div>
+
+  <div class="flex flex-wrap items-center gap-3 mb-8">
+    <button id="btn-guidance" onclick="startGuidance()" class="btn-primary px-6 py-3 rounded font-medium text-sm flex items-center gap-2">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2v4M12 18v4M4.93 4.93l2.83 2.83M16.24 16.24l2.83 2.83M2 12h4M18 12h4M4.93 19.07l2.83-2.83M16.24 7.76l2.83-2.83"/></svg>
+      启动构思追问
+    </button>
+    <button onclick="loadSample()" class="btn-ghost px-5 py-3 rounded text-sm">恢复2024真题</button>
+    <span class="text-xs ml-auto" style="color:var(--ink-muted);">⌘ DeepSeek-V3 · 评分逻辑参考新课标(2017版2020修订)</span>
+  </div>
+
+  <!-- guidance output -->
+  <div id="guidance-output" class="hidden">
+    <div class="paper-card p-7 reveal">
+      <div class="flex items-center gap-3 mb-5">
+        <span class="badge badge-vermillion">AI 构思教练</span>
+        <h3 class="font-serif-cn text-xl font-bold" style="color:var(--ink);">构思追问</h3>
+      </div>
+      <div id="guidance-content" class="markdown-output"></div>
+
+      <div class="rule-line my-6"></div>
+
+      <div>
+        <label class="text-sm font-semibold flex items-center gap-2 mb-2" style="color:var(--ink);">
+          <span class="seal" style="width:24px;height:24px;font-size:11px;letter-spacing:-1px;transform:rotate(0);box-shadow:inset 0 0 0 1px white,inset 0 0 0 2px var(--vermillion);">笔</span>
+          我的构思笔记
+        </label>
+        <textarea id="thinking-notes" rows="6" class="input-paper text-[13.5px]" placeholder="在这里逐条记录你对追问的回答(中英文皆可)。完成后,前往「写后诊断」上传你的续写初稿。"></textarea>
+        <p class="text-xs mt-3 font-serif-cn" style="color:var(--ink-muted);">💡 构思笔记将作为形成性评价依据,与最终作文一并建档存入你的写作成长档案。</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+<!-- =========== TAB 2 写后诊断 =========== -->
+<section id="tab-2" class="tab-content hidden">
+  <div class="mb-7">
+    <span class="section-num">— STEP 02 —</span>
+    <h2 class="font-serif-cn text-2xl font-bold mt-2" style="color:var(--ink);">四维诊断,定位到句</h2>
+    <p class="text-sm mt-2 font-serif-cn" style="color:var(--ink-muted); max-width: 640px;">
+      按照新课标读后续写官方四大评分维度——<strong>与原文融洽度 / 内容丰富性 / 语言准确性 / 上下文连贯性</strong>——对你的续写进行分项打分,每一处扣分均定位到具体句子,并给出可操作的修改方向。
+    </p>
+  </div>
+
+  <div class="paper-card p-5 mb-5">
+    <label class="text-sm font-semibold block mb-2" style="color:var(--ink);">学生续写(Student Continuation)</label>
+    <textarea id="student-text" rows="12" class="input-paper text-[13.5px] leading-[1.8]" placeholder="将学生的续写两段粘贴到这里(原文段落首句也包含在内)。AI 将根据 Tab① 的原文进行评分。"></textarea>
+    <p class="text-xs mt-2" style="color:var(--ink-muted);">
+      字数建议:每段 75–85 词,合计 150 词左右。
+      <span id="word-count" class="ml-2 tnum"></span>
+    </p>
+  </div>
+
+  <div class="flex items-center gap-3 mb-8">
+    <button id="btn-diagnose" onclick="startDiagnose()" class="btn-primary px-6 py-3 rounded font-medium text-sm flex items-center gap-2">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+      提交诊断
+    </button>
+    <button onclick="loadSampleEssay()" class="btn-ghost px-5 py-3 rounded text-sm">载入示例作文(中等水平)</button>
+  </div>
+
+  <!-- diagnose output -->
+  <div id="diagnose-output" class="hidden">
+    <div class="grid grid-cols-1 lg:grid-cols-3 gap-5 mb-5 reveal">
+      <!-- 总分块 -->
+      <div class="lg:col-span-1 paper-card p-6">
+        <div class="text-xs font-medium mb-2" style="color:var(--ink-muted); letter-spacing:1px;">TOTAL SCORE · 总分</div>
+        <div class="flex items-baseline gap-1">
+          <span id="total-score" class="total-score-num tnum">0.0</span>
+          <span class="total-score-suffix">/ 25</span>
+        </div>
+        <div id="tier-badge" class="mt-3 badge badge-vermillion">—</div>
+        <div class="rule-line my-5"></div>
+        <div id="overall-comment" class="text-sm font-serif-cn" style="color:var(--ink-soft); line-height:1.7;"></div>
+      </div>
+
+      <!-- 四维分数 -->
+      <div class="lg:col-span-2 paper-card p-6">
+        <div class="text-xs font-medium mb-4" style="color:var(--ink-muted); letter-spacing:1px;">DIMENSIONS · 四维评分</div>
+        <div class="score-wrap" id="score-bars"></div>
+      </div>
+    </div>
+
+    <!-- 优点 -->
+    <div id="strengths-section" class="paper-card p-6 mb-5 reveal hidden">
+      <div class="flex items-center gap-2 mb-3">
+        <span class="badge badge-jade">亮点</span>
+        <h3 class="font-serif-cn text-lg font-bold" style="color:var(--ink);">值得保留的写法</h3>
+      </div>
+      <div id="strengths-list"></div>
+    </div>
+
+    <!-- 问题热力图 -->
+    <div class="paper-card p-6 mb-5 reveal">
+      <div class="flex items-center gap-2 mb-4">
+        <span class="badge badge-vermillion">问题热力图</span>
+        <h3 class="font-serif-cn text-lg font-bold" style="color:var(--ink);">逐句诊断</h3>
+      </div>
+      <div class="flex gap-4 mb-4 text-xs" style="color:var(--ink-muted);">
+        <div class="flex items-center gap-1.5"><div style="width:10px;height:10px;background:var(--vermillion);border-radius:1px;"></div>融洽度</div>
+        <div class="flex items-center gap-1.5"><div style="width:10px;height:10px;background:var(--gold);border-radius:1px;"></div>丰富性</div>
+        <div class="flex items-center gap-1.5"><div style="width:10px;height:10px;background:var(--navy);border-radius:1px;"></div>准确性</div>
+        <div class="flex items-center gap-1.5"><div style="width:10px;height:10px;background:var(--jade);border-radius:1px;"></div>连贯性</div>
+      </div>
+      <div id="issues-list"></div>
+    </div>
+
+    <div class="text-center">
+      <button onclick="switchTab('3')" class="btn-primary px-6 py-3 rounded font-medium text-sm">
+        进入第三步:自主改稿 →
+      </button>
+    </div>
+  </div>
+</section>
+
+
+<!-- =========== TAB 3 自主改稿 =========== -->
+<section id="tab-3" class="tab-content hidden">
+  <div class="mb-7">
+    <span class="section-num">— STEP 03 —</span>
+    <h2 class="font-serif-cn text-2xl font-bold mt-2" style="color:var(--ink);">三类支架,自主迭代</h2>
+    <p class="text-sm mt-2 font-serif-cn" style="color:var(--ink-muted); max-width: 640px;">
+      基于上一步的诊断,智能体生成三类修改支架——<strong>问题定位清单 / 对标范文片段 / 自改提示语</strong>——其中范文严格采用比当前水平<strong style="color:var(--vermillion-deep);">高一档</strong>的样本,做到"踮脚够得着"。
+    </p>
+  </div>
+
+  <div id="no-diagnose-hint" class="paper-card p-8 text-center">
+    <p class="text-sm" style="color:var(--ink-muted);">请先在「写后诊断」中提交一次评分,再回到此处获取改稿支架。</p>
+    <button onclick="switchTab('2')" class="btn-ghost px-5 py-2 rounded text-sm mt-4">前往写后诊断</button>
+  </div>
+
+  <div id="revision-section" class="hidden">
+    <div class="flex items-center gap-3 mb-5">
+      <button id="btn-scaffold" onclick="generateScaffold()" class="btn-primary px-6 py-3 rounded font-medium text-sm">
+        生成改稿支架
+      </button>
+    </div>
+
+    <div id="scaffold-output" class="hidden">
+      <div class="grid grid-cols-1 lg:grid-cols-3 gap-5 mb-7 reveal">
+        <div class="paper-card p-5">
+          <div class="flex items-center gap-2 mb-3">
+            <span class="badge badge-vermillion">支架①</span>
+          </div>
+          <h3 class="font-serif-cn text-base font-bold mb-3" style="color:var(--ink);">问题定位清单</h3>
+          <div id="scaffold-issues" class="markdown-output text-[13.5px]"></div>
+        </div>
+        <div class="paper-card p-5">
+          <div class="flex items-center gap-2 mb-3">
+            <span class="badge badge-gold">支架②</span>
+          </div>
+          <h3 class="font-serif-cn text-base font-bold mb-3" style="color:var(--ink);">对标范文片段</h3>
+          <div id="scaffold-models" class="markdown-output text-[13.5px]"></div>
+        </div>
+        <div class="paper-card p-5">
+          <div class="flex items-center gap-2 mb-3">
+            <span class="badge badge-jade">支架③</span>
+          </div>
+          <h3 class="font-serif-cn text-base font-bold mb-3" style="color:var(--ink);">自改提示语</h3>
+          <div id="scaffold-prompts" class="markdown-output text-[13.5px]"></div>
+        </div>
+      </div>
+
+      <div class="paper-card p-6 mb-5">
+        <label class="text-sm font-semibold block mb-2" style="color:var(--ink);">修改后的续写(Revised Continuation)</label>
+        <textarea id="revised-text" rows="12" class="input-paper text-[13.5px] leading-[1.8]" placeholder="基于上面三类支架,在这里写出你的修改稿。完成后点击「再次诊断」进入新一轮评分。"></textarea>
+        <div class="flex items-center gap-3 mt-4">
+          <button onclick="rediagnose()" class="btn-primary px-6 py-2.5 rounded text-sm font-medium">再次诊断</button>
+          <span class="text-xs" style="color:var(--ink-muted);">本轮迭代记录将归入你的写作成长档案 →</span>
+        </div>
+      </div>
+
+      <div id="rediagnose-output" class="hidden paper-card p-6 reveal">
+        <h3 class="font-serif-cn text-lg font-bold mb-3" style="color:var(--ink);">第二轮诊断对比</h3>
+        <div id="rediagnose-content"></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+<!-- =========== TAB 4 关于 =========== -->
+<section id="tab-4" class="tab-content hidden">
+  <div class="mb-8">
+    <span class="section-num">— ABOUT —</span>
+    <h2 class="font-serif-cn text-2xl font-bold mt-2" style="color:var(--ink);">"续见" · 设计理念与技术架构</h2>
+  </div>
+
+  <div class="grid grid-cols-1 lg:grid-cols-2 gap-5 mb-5">
+    <div class="paper-card p-6">
+      <h3 class="font-serif-cn text-lg font-bold mb-3" style="color:var(--ink);">教学痛点</h3>
+      <ul class="text-sm space-y-2 font-serif-cn" style="color:var(--ink-soft); list-style:disc; padding-left:18px;">
+        <li><strong>批改慢:</strong>一个班 50+ 学生,一篇精批 5–8 分钟,反馈周期常达数日</li>
+        <li><strong>反馈慢:</strong>作文发回时学生记忆热度已退,多数只看分数不看批注</li>
+        <li><strong>迭代慢:</strong>"一次终稿"成常态,但写作能力恰恰来自反复修改</li>
+        <li><strong>评分脱节:</strong>通用 AI 工具偏重语法,忽视读后续写真正的核心维度——<em>与原文融洽度、内容丰富性</em></li>
+      </ul>
+    </div>
+    <div class="paper-card p-6">
+      <h3 class="font-serif-cn text-lg font-bold mb-3" style="color:var(--ink);">解决路径</h3>
+      <ul class="text-sm space-y-2 font-serif-cn" style="color:var(--ink-soft); list-style:disc; padding-left:18px;">
+        <li><strong>评价对标高考:</strong>RAG 接入官方评分量表与历年评分细则</li>
+        <li><strong>守住"不代写":</strong>仅提供思维支架,不输出完整续写句</li>
+        <li><strong>分档范文匹配:</strong>"比当前水平高一档"精准推送</li>
+        <li><strong>闭环可沉淀:</strong>每次评分自动归档,形成可视化写作成长档案</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="paper-card p-6 mb-5">
+    <h3 class="font-serif-cn text-lg font-bold mb-4" style="color:var(--ink);">技术架构</h3>
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-4 text-sm">
+      <div>
+        <div class="text-xs mb-1" style="color:var(--ink-muted); letter-spacing:1px;">FRONTEND · 前端</div>
+        <p style="color:var(--ink-soft);">单页 HTML + Tailwind CSS,零依赖部署,扫码即用</p>
+      </div>
+      <div>
+        <div class="text-xs mb-1" style="color:var(--ink-muted); letter-spacing:1px;">LLM · 大模型</div>
+        <p style="color:var(--ink-soft);">DeepSeek-V3(国产,中英文综合推理),通过 OpenAI 兼容接口调用</p>
+      </div>
+      <div>
+        <div class="text-xs mb-1" style="color:var(--ink-muted); letter-spacing:1px;">RAG · 知识库</div>
+        <p style="color:var(--ink-soft);">新课标评分量表 + 真题与官方细则 + 分级范文库 + 错误类型库</p>
+      </div>
+    </div>
+    <div class="rule-line my-5"></div>
+    <details class="text-sm">
+      <summary class="font-semibold" style="color:var(--ink);">查看核心提示词(节选)</summary>
+      <div class="mt-3 p-4 rounded text-xs leading-relaxed font-mono" style="background:var(--paper-2); color:var(--ink-soft); white-space:pre-wrap;">## 智能体人设
+你是一位熟悉新高考英语读后续写评分标准、坚持启发式教学的英语写作教练。
+
+## 核心约束(不可违反)
+1. 严格守住"不代写"边界,绝不输出任何完整的英文续写句子
+2. 反馈必须定位到具体句子序号
+3. 范文推送需比学生当前水平高一档(22-25/18-21/14-17 三档)
+4. 评分依据《普通高中英语课程标准(2017年版2020年修订)》读后续写量表
+5. 涉及学生作品的输出需做匿名化处理
+
+## 评分维度(各 0-6.25,合计 25)
+1. 与原文融洽度:情节衔接合理性、语言风格与人物塑造的一致性
+2. 内容丰富性:情节推进、细节描写张力
+3. 语言准确性:语法、拼写、词汇丰富度
+4. 上下文连贯性:段内段间逻辑、过渡衔接</div>
+    </details>
+  </div>
+
+  <div class="paper-card p-6">
+    <h3 class="font-serif-cn text-lg font-bold mb-3" style="color:var(--ink);">伦理与合规</h3>
+    <ul class="text-sm space-y-2 font-serif-cn" style="color:var(--ink-soft); list-style:disc; padding-left:18px;">
+      <li>本工具基于<strong>国产大模型</strong>(DeepSeek)开发,符合《生成式人工智能服务管理暂行办法》要求</li>
+      <li>学生作品在评分时不存储原文,仅传输至模型进行单次推理后即清除</li>
+      <li>AI 生成的反馈、范文均带有"AI生成"标识</li>
+      <li>不输出完整英文续写,落实<em>"以人为本"</em>的教育伦理</li>
+    </ul>
+  </div>
+
+  <div class="text-center mt-10 mb-4 text-xs" style="color:var(--ink-muted);">
+    <div class="flex items-center justify-center gap-3 mb-2">
+      <span class="seal" style="width:18px;height:18px;font-size:9px;letter-spacing:-1px;">续见</span>
+    </div>
+    续见 XÙ JIÀN · 廖鑫宇 · 2026
+  </div>
+</section>
+
+</main>
+
+
+<!-- ========== SETTINGS MODAL ========== -->
+<div id="settings-modal" class="hidden fixed inset-0 z-50 modal-backdrop flex items-center justify-center px-4">
+  <div class="paper-card max-w-md w-full p-7" style="background: white;">
+    <div class="flex items-center gap-3 mb-4">
+      <div class="seal" style="width:36px;height:36px;font-size:14px;letter-spacing:-1px;">配置</div>
+      <h2 class="font-serif-cn text-xl font-bold" style="color:var(--ink);">DeepSeek API 配置</h2>
+    </div>
+    <p class="text-sm mb-4" style="color:var(--ink-soft);">
+      请前往 <a href="https://platform.deepseek.com/api_keys" target="_blank" style="color:var(--vermillion-deep); text-decoration:underline;">platform.deepseek.com</a> 创建 API Key 后粘贴到此处。
+    </p>
+    <input id="api-key-input" type="password" class="input-paper" placeholder="sk-xxxxxxxxxxxxxxxxxxxxxxxx" />
+    <p class="text-xs mt-2" style="color:var(--ink-muted);">
+      ⚠ 出于安全考虑,Key 只保存在当前页面内存,刷新后需重新输入。
+    </p>
+    <div class="rule-line my-5"></div>
+    <div class="flex items-center justify-between">
+      <label class="flex items-center gap-2 text-sm" style="color:var(--ink-soft);">
+        <input type="checkbox" id="demo-mode" />
+        <span>启用演示模式(无 Key 时使用预设回答)</span>
+      </label>
+    </div>
+    <div class="flex gap-3 mt-5">
+      <button onclick="closeSettings()" class="btn-ghost flex-1 py-2.5 rounded text-sm">取消</button>
+      <button onclick="saveSettings()" class="btn-primary flex-1 py-2.5 rounded text-sm font-medium">保存</button>
+    </div>
+  </div>
+</div>
+
+
+<script>
+/* ============================================================
+   续见 - 状态与逻辑
+============================================================ */
+
+const SAMPLE_PASSAGE = `I met Gunter on a cold, wet and unforgettable evening in September. I had planned to fly to Vienna and take a bus to Prague for a conference. Due to a big storm, my flight had been delayed by an hour and a half. I touched down in Vienna just 30 minutes before the departure of the last bus to Prague. The moment I got off the plane, I ran like crazy through the airport building and jumped into the first taxi on the rank without a second thought. That was when I met Gunter. I told him where I was going, but he said he hadn't heard of the bus station. I thought my pronunciation was the problem, so I explained again more slowly, but he still looked confused. When I was about to give up, Gunter fished out his little phone and rang up a friend.
+
+Finally, with just two minutes to spare we rolled into the bus station. Thankfully, there was a long queue still waiting to board the bus. Gunter parked the taxi behind the bus, turned around, and looked at me with a big smile on his face. "We made it," he said. Just then I realised that I had zero cash in my wallet. I flashed him an apologetic smile as I pulled out my Portuguese bankcard. He tried it several times, but the card machine just did not play along. A feeling of helplessness washed over me as I saw the bus queue thinning out. At this moment, Gunter pointed towards the waiting hall of the bus station. There, at the entrance, was a cash machine. I jumped out of the car, made a mad run for the machine, and popped my card in, only to read the message: "Out of order. Sorry."`;
+
+const SAMPLE_OPENERS = `Paragraph 1: I ran back to Gunter and told him the bad news.
+
+Paragraph 2: Four days later, when I was back in Vienna, I called Gunter as promised.`;
+
+const SAMPLE_ESSAY = `I ran back to Gunter and told him the bad news. He listened carefully and his face showed a kind smile. "Don't worry," he said softly. "Just take the bus first. You can pay me when you come back to Vienna." I was very surprised by his words. A complete stranger was willing to trust me. I quickly wrote down his phone number on a small piece of paper and promised to call him. Then I ran to the bus and got on it just before it left. Sitting on the bus, I felt very thankful and a little guilty.
+
+Four days later, when I was back in Vienna, I called Gunter as promised. He came to pick me up at the airport with the same warm smile. I gave him the money and also a small gift from Prague to thank him. He was happy to see me again and we had a long talk in his taxi. From that day on, we became good friends. Every time I visited Vienna, Gunter was the first person I would call. His kindness made me believe that there is still trust and warmth between strangers in this busy world.`;
+
+const state = {
+  apiKey: '',
+  demoMode: false,
+  passage: SAMPLE_PASSAGE,
+  openers: SAMPLE_OPENERS,
+  guidance: null,
+  diagnosis: null,
+  studentText: '',
+  scaffold: null,
+};
+
+/* ---------- INIT ---------- */
+function init() {
+  document.getElementById('passage').value = SAMPLE_PASSAGE;
+  document.getElementById('openers').value = SAMPLE_OPENERS;
+  
+  document.querySelectorAll('.tab-btn').forEach(btn => {
+    btn.addEventListener('click', () => switchTab(btn.dataset.tab));
+  });
+  
+  document.getElementById('student-text').addEventListener('input', updateWordCount);
+  updateWordCount();
+}
+
+function updateWordCount() {
+  const text = document.getElementById('student-text').value.trim();
+  const words = text ? text.split(/\s+/).length : 0;
+  document.getElementById('word-count').textContent = words ? `· 当前 ${words} 词` : '';
+}
+
+function switchTab(id) {
+  document.querySelectorAll('.tab-btn').forEach(b => b.classList.toggle('active', b.dataset.tab === id));
+  document.querySelectorAll('.tab-content').forEach(s => s.classList.toggle('hidden', s.id !== `tab-${id}`));
+  
+  if (id === '3') {
+    if (state.diagnosis) {
+      document.getElementById('no-diagnose-hint').classList.add('hidden');
+      document.getElementById('revision-section').classList.remove('hidden');
+    } else {
+      document.getElementById('no-diagnose-hint').classList.remove('hidden');
+      document.getElementById('revision-section').classList.add('hidden');
+    }
+  }
+  
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+function loadSample() {
+  document.getElementById('passage').value = SAMPLE_PASSAGE;
+  document.getElementById('openers').value = SAMPLE_OPENERS;
+}
+
+function loadSampleEssay() {
+  document.getElementById('student-text').value = SAMPLE_ESSAY;
+  updateWordCount();
+}
+
+/* ---------- SETTINGS ---------- */
+function openSettings() {
+  document.getElementById('api-key-input').value = state.apiKey;
+  document.getElementById('demo-mode').checked = state.demoMode;
+  document.getElementById('settings-modal').classList.remove('hidden');
+}
+function closeSettings() {
+  document.getElementById('settings-modal').classList.add('hidden');
+}
+function saveSettings() {
+  state.apiKey = document.getElementById('api-key-input').value.trim();
+  state.demoMode = document.getElementById('demo-mode').checked;
+  
+  const indicator = document.getElementById('api-indicator');
+  if (state.apiKey) {
+    indicator.classList.remove('hidden');
+    indicator.textContent = '● 已接入 DeepSeek';
+    indicator.style.color = 'var(--jade)';
+  } else if (state.demoMode) {
+    indicator.classList.remove('hidden');
+    indicator.textContent = '● 演示模式';
+    indicator.style.color = 'var(--gold)';
+  } else {
+    indicator.classList.add('hidden');
+  }
+  closeSettings();
+}
+
+/* ---------- DEEPSEEK API ---------- */
+async function callDeepSeek(messages, opts = {}) {
+  // demo mode: return preset
+  if (state.demoMode && !state.apiKey) {
+    await new Promise(r => setTimeout(r, 1200 + Math.random() * 600));
+    return getDemoResponse(opts.demoKey);
+  }
+  
+  if (!state.apiKey) {
+    alert('请先在右上角「配置」中设置 DeepSeek API Key,或启用演示模式。');
+    openSettings();
+    throw new Error('No API key');
+  }
+  
+  const body = {
+    model: opts.model || 'deepseek-chat',
+    messages,
+    temperature: opts.temperature ?? 0.7,
+    max_tokens: opts.maxTokens || 2000,
+  };
+  if (opts.json) body.response_format = { type: 'json_object' };
+  
+  const res = await fetch('https://api.deepseek.com/v1/chat/completions', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      'Authorization': `Bearer ${state.apiKey}`,
+    },
+    body: JSON.stringify(body),
+  });
+  
+  if (!res.ok) {
+    const errText = await res.text();
+    throw new Error(`DeepSeek API 错误 (${res.status}): ${errText.slice(0, 200)}`);
+  }
+  
+  const data = await res.json();
+  return data.choices[0].message.content;
+}
+
+/* ---------- MARKDOWN ---------- */
+function renderMarkdown(text) {
+  if (!text) return '';
+  let html = text.trim();
+  // headers
+  html = html.replace(/^### (.+)$/gm, '<h3>$1</h3>');
+  // bold/italic/code
+  html = html.replace(/\*\*([^*]+)\*\*/g, '<strong>$1</strong>');
+  html = html.replace(/(?<!\*)\*([^*\n]+)\*(?!\*)/g, '<em>$1</em>');
+  html = html.replace(/`([^`]+)`/g, '<code>$1</code>');
+  // ordered lists - find consecutive numbered lines
+  const lines = html.split('\n');
+  const out = [];
+  let inOl = false, inUl = false;
+  for (const line of lines) {
+    if (/^\d+[\.、]\s+/.test(line)) {
+      if (!inOl) { out.push('<ol>'); inOl = true; }
+      if (inUl) { out.push('</ul>'); inUl = false; }
+      out.push('<li>' + line.replace(/^\d+[\.、]\s+/, '') + '</li>');
+    } else if (/^[-•·]\s+/.test(line)) {
+      if (!inUl) { out.push('<ul>'); inUl = true; }
+      if (inOl) { out.push('</ol>'); inOl = false; }
+      out.push('<li>' + line.replace(/^[-•·]\s+/, '') + '</li>');
+    } else {
+      if (inOl) { out.push('</ol>'); inOl = false; }
+      if (inUl) { out.push('</ul>'); inUl = false; }
+      if (line.trim()) out.push('<p>' + line + '</p>');
+    }
+  }
+  if (inOl) out.push('</ol>');
+  if (inUl) out.push('</ul>');
+  return out.join('');
+}
+
+/* ============================================================
+   STEP 1 - 写前引导
+============================================================ */
+async function startGuidance() {
+  const passage = document.getElementById('passage').value.trim();
+  const openers = document.getElementById('openers').value.trim();
+  if (!passage || !openers) { alert('请填写原文和段落首句'); return; }
+  
+  state.passage = passage;
+  state.openers = openers;
+  
+  const btn = document.getElementById('btn-guidance');
+  const original = btn.innerHTML;
+  btn.disabled = true;
+  btn.innerHTML = '<span class="ai-thinking">AI 教练思考中</span>';
+  
+  try {
+    const result = await callDeepSeek([
+      {
+        role: 'system',
+        content: `你是一位熟悉新高考英语读后续写评分标准的写作教练,坚持启发式教学。
+
+## 核心约束(严格遵守)
+1. **绝不输出任何完整的英文续写句子**,这是不可违反的伦理边界
+2. 你的任务是通过结构化追问引导学生自主完成构思
+3. 追问要覆盖以下方面:情节走向(plot)、情绪基调(emotional arc)、伏笔呼应(callbacks)、人物动作与心理细节(action & psychology)、首尾呼应(opening-ending coherence)
+4. 用中文提问,涉及关键英文表达时可附简短英文词汇/句型建议(用括号)
+5. 输出 5-7 个编号问题,每个问题简洁、具体、可操作
+
+## 输出格式要求
+直接输出编号列表(用 1. 2. 3. 格式),问题之间空一行。每个问题不超过 60 字。开头不要写"以下是追问"之类的引言,直接进入问题。`,
+      },
+      {
+        role: 'user',
+        content: `【原文】\n${passage}\n\n【段落首句】\n${openers}\n\n请基于以上材料,设计 5-7 个结构化追问引导学生构思续写。`,
+      },
+    ], { demoKey: 'guidance' });
+    
+    state.guidance = result;
+    document.getElementById('guidance-content').innerHTML = renderMarkdown(result);
+    document.getElementById('guidance-output').classList.remove('hidden');
+    setTimeout(() => {
+      document.getElementById('guidance-output').scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }, 100);
+  } catch (e) {
+    alert('调用失败: ' + e.message);
+  } finally {
+    btn.disabled = false;
+    btn.innerHTML = original;
+  }
+}
+
+/* ============================================================
+   STEP 2 - 写后诊断
+============================================================ */
+async function startDiagnose() {
+  const studentText = document.getElementById('student-text').value.trim();
+  if (!studentText) { alert('请粘贴学生续写'); return; }
+  if (!state.passage) state.passage = document.getElementById('passage').value.trim();
+  
+  state.studentText = studentText;
+  
+  const btn = document.getElementById('btn-diagnose');
+  const original = btn.innerHTML;
+  btn.disabled = true;
+  btn.innerHTML = '<span class="ai-thinking">四维评分中</span>';
+  
+  try {
+    const result = await callDeepSeek([
+      {
+        role: 'system',
+        content: `你是一位严格按高考新课标读后续写评分标准评分的英语教师。你必须以纯 JSON 格式回复,不要任何额外说明文字、代码块标记或解释。
+
+## 评分维度(每项 0-6.25 分,合计 25 分)
+1. **rapport · 与原文融洽度**:情节衔接合理性、人物语言风格的一致性
+2. **richness · 内容丰富性**:情节推进、细节描写张力
+3. **accuracy · 语言准确性**:语法、拼写、用词得体性、词汇丰富度
+4. **coherence · 上下文连贯性**:段内、段间逻辑、过渡衔接
+
+## 档次划分(参考新课标)
+- 21-25 分(第五档):内容丰富,语言完全得体
+- 16-20 分(第四档):内容较丰富,语言较得体
+- 11-15 分(第三档):内容基本完整,语言基本得体
+- 6-10 分(第二档):内容部分相关,语言错误较多
+- 1-5 分(第一档):内容偏离主题,语言错误严重
+
+## 输出严格遵循以下 JSON schema(不要 markdown 代码块):
+{
+  "scores": {
+    "rapport": <数字, 一位小数>,
+    "richness": <数字, 一位小数>,
+    "accuracy": <数字, 一位小数>,
+    "coherence": <数字, 一位小数>
+  },
+  "total": <数字, 一位小数>,
+  "level": "<档次描述, 如: 第四档(16-20分)>",
+  "tier": <整数, 1-5>,
+  "strengths": ["<亮点1, 中文>", "<亮点2>"],
+  "sentence_issues": [
+    {
+      "sentence": "<学生原句>",
+      "dimension": "<rapport/richness/accuracy/coherence>",
+      "issue": "<问题描述, 中文, 不超过50字>",
+      "suggestion": "<修改方向, 中文, 不直接给改后版本, 不超过60字>"
+    }
+  ],
+  "overall": "<总评, 中文, 2-3 句>"
+}
+
+## 重要约束
+- sentence_issues 至少 3 条,最多 6 条,选最值得修改的
+- suggestion 字段不允许直接给出改后的英文句子,只能描述修改方向
+- 评分要符合高考真实尺度,不要虚高`,
+      },
+      {
+        role: 'user',
+        content: `【原文】\n${state.passage}\n\n【学生续写】\n${studentText}\n\n请按四维评分,输出 JSON。`,
+      },
+    ], { json: true, demoKey: 'diagnose', temperature: 0.3 });
+    
+    let data;
+    try {
+      data = JSON.parse(result);
+    } catch (e) {
+      // try to extract JSON from text
+      const m = result.match(/\{[\s\S]*\}/);
+      if (m) data = JSON.parse(m[0]);
+      else throw new Error('返回格式异常');
+    }
+    
+    state.diagnosis = data;
+    renderDiagnosis(data);
+    document.getElementById('diagnose-output').classList.remove('hidden');
+    setTimeout(() => {
+      document.getElementById('diagnose-output').scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }, 100);
+  } catch (e) {
+    alert('诊断失败: ' + e.message);
+    console.error(e);
+  } finally {
+    btn.disabled = false;
+    btn.innerHTML = original;
+  }
+}
+
+function tierClass(score, max = 6.25) {
+  const ratio = score / max;
+  if (ratio >= 0.85) return 'tier-good';
+  if (ratio >= 0.7) return '';
+  if (ratio >= 0.5) return 'tier-ok';
+  return 'tier-low';
+}
+
+function renderDiagnosis(data) {
+  // total
+  document.getElementById('total-score').textContent = data.total.toFixed(1);
+  
+  const tierBadge = document.getElementById('tier-badge');
+  tierBadge.textContent = data.level || `${data.total} 分`;
+  // tier-based color
+  const tier = data.tier || (data.total >= 21 ? 5 : data.total >= 16 ? 4 : data.total >= 11 ? 3 : data.total >= 6 ? 2 : 1);
+  if (tier >= 4) tierBadge.className = 'mt-3 badge badge-jade';
+  else if (tier === 3) tierBadge.className = 'mt-3 badge badge-gold';
+  else tierBadge.className = 'mt-3 badge badge-vermillion';
+  
+  document.getElementById('overall-comment').textContent = data.overall || '';
+  
+  // dimension bars
+  const dims = [
+    { key: 'rapport', label: '与原文融洽度' },
+    { key: 'richness', label: '内容丰富性' },
+    { key: 'accuracy', label: '语言准确性' },
+    { key: 'coherence', label: '上下文连贯性' },
+  ];
+  const barsHtml = dims.map(d => {
+    const v = data.scores[d.key] || 0;
+    const pct = (v / 6.25 * 100).toFixed(0);
+    return `
+      <div class="score-row">
+        <div class="score-label">${d.label}</div>
+        <div class="score-track">
+          <div class="score-fill ${tierClass(v)}" data-target="${pct}"></div>
+        </div>
+        <div class="score-num tnum">${v.toFixed(1)}</div>
+      </div>`;
+  }).join('');
+  document.getElementById('score-bars').innerHTML = barsHtml;
+  // animate bars
+  setTimeout(() => {
+    document.querySelectorAll('#score-bars .score-fill').forEach(el => {
+      el.style.width = el.dataset.target + '%';
+    });
+  }, 80);
+  
+  // strengths
+  const strengthsList = document.getElementById('strengths-list');
+  if (data.strengths && data.strengths.length) {
+    strengthsList.innerHTML = data.strengths.map(s => `<div class="strength-card">✓ ${escapeHtml(s)}</div>`).join('');
+    document.getElementById('strengths-section').classList.remove('hidden');
+  } else {
+    document.getElementById('strengths-section').classList.add('hidden');
+  }
+  
+  // issues
+  const dimMap = {
+    rapport: { label: '融洽度', cls: 'dim-rapport' },
+    richness: { label: '丰富性', cls: 'dim-richness' },
+    accuracy: { label: '准确性', cls: 'dim-accuracy' },
+    coherence: { label: '连贯性', cls: 'dim-coherence' },
+  };
+  const issuesHtml = (data.sentence_issues || []).map((iss, idx) => {
+    const dm = dimMap[iss.dimension] || { label: iss.dimension, cls: 'dim-rapport' };
+    return `
+      <div class="issue-card ${dm.cls}">
+        <div class="flex items-start justify-between gap-3 mb-2">
+          <span class="text-xs font-semibold tnum" style="color:var(--ink-muted);">#${idx+1}</span>
+          <span class="badge badge-vermillion">${dm.label}</span>
+        </div>
+        <p class="text-[13px] mb-2 italic" style="color:var(--ink-soft);">"${escapeHtml(iss.sentence)}"</p>
+        <p class="text-[13px] mb-1.5"><strong style="color:var(--ink);">问题:</strong> <span style="color:var(--ink-soft);">${escapeHtml(iss.issue)}</span></p>
+        <p class="text-[13px]"><strong style="color:var(--ink);">修改方向:</strong> <span style="color:var(--ink-soft);">${escapeHtml(iss.suggestion)}</span></p>
+      </div>`;
+  }).join('');
+  document.getElementById('issues-list').innerHTML = issuesHtml || '<p class="text-sm" style="color:var(--ink-muted);">暂无具体问题。</p>';
+}
+
+function escapeHtml(s) {
+  if (!s) return '';
+  return String(s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+}
+
+/* ============================================================
+   STEP 3 - 自主改稿
+============================================================ */
+async function generateScaffold() {
+  if (!state.diagnosis) { alert('请先完成诊断'); return; }
+  
+  const btn = document.getElementById('btn-scaffold');
+  const original = btn.innerHTML;
+  btn.disabled = true;
+  btn.innerHTML = '<span class="ai-thinking">生成支架中</span>';
+  
+  // 计算"高一档"
+  const currentTier = state.diagnosis.tier || 3;
+  const targetTier = Math.min(5, currentTier + 1);
+  const targetRange = ['', '6-10分', '11-15分', '16-20分', '21-25分', '21-25分'][targetTier];
+  
+  try {
+    const result = await callDeepSeek([
+      {
+        role: 'system',
+        content: `你是一位英语写作教练。请基于学生作文的诊断结果,生成三类修改支架。
+
+## 输出格式(严格分三段,用三级标题分隔)
+
+### 问题定位清单
+列出学生最该优先修改的 3-4 个问题,每条以"句子定位 + 问题简述"格式,使用编号列表。
+
+### 对标范文片段
+从【${targetRange}档】的水平,提供 1-2 个与本题情节匹配的范文片段(每个 3-5 句英文 + 中文翻译/亮点点评)。范文必须高于学生当前水平一档,做到"踮脚够得着"。
+
+### 自改提示语
+针对每个主要问题,给出具体的改写思路提示(用编号列表),**不直接给出改后的完整英文句子**,只描述修改方向、可考虑的句型/词汇/衔接手段。
+
+## 重要约束
+- 不输出学生作文的"改后完整版本"
+- 范文片段必须明确标注分数档次
+- 三个标题必须严格使用 "### 问题定位清单" "### 对标范文片段" "### 自改提示语" 格式`,
+      },
+      {
+        role: 'user',
+        content: `【原文】\n${state.passage}\n\n【学生续写】\n${state.studentText}\n\n【诊断结果】\n总分:${state.diagnosis.total}/25 (${state.diagnosis.level})\n主要问题:\n${(state.diagnosis.sentence_issues || []).map(i => `- ${i.issue}`).join('\n')}\n\n学生当前水平:第${currentTier}档,目标对标范文档次:${targetRange}\n\n请生成三类支架。`,
+      },
+    ], { temperature: 0.6, demoKey: 'scaffold' });
+    
+    state.scaffold = result;
+    
+    // 拆分三段
+    const sections = parseScaffoldSections(result);
+    document.getElementById('scaffold-issues').innerHTML = renderMarkdown(sections.issues);
+    document.getElementById('scaffold-models').innerHTML = renderMarkdown(sections.models);
+    document.getElementById('scaffold-prompts').innerHTML = renderMarkdown(sections.prompts);
+    
+    document.getElementById('scaffold-output').classList.remove('hidden');
+    
+    // 预填修改稿
+    if (!document.getElementById('revised-text').value) {
+      document.getElementById('revised-text').value = state.studentText;
+    }
+  } catch (e) {
+    alert('生成失败: ' + e.message);
+  } finally {
+    btn.disabled = false;
+    btn.innerHTML = original;
+  }
+}
+
+function parseScaffoldSections(text) {
+  const result = { issues: '', models: '', prompts: '' };
+  const parts = text.split(/^###\s+/m).filter(Boolean);
+  for (const p of parts) {
+    const firstLine = p.split('\n')[0].trim();
+    const body = p.split('\n').slice(1).join('\n').trim();
+    if (firstLine.includes('定位') || firstLine.includes('问题')) result.issues = body;
+    else if (firstLine.includes('范文') || firstLine.includes('对标')) result.models = body;
+    else if (firstLine.includes('自改') || firstLine.includes('提示')) result.prompts = body;
+  }
+  // fallback: just dump
+  if (!result.issues && !result.models && !result.prompts) {
+    result.issues = text;
+  }
+  return result;
+}
+
+async function rediagnose() {
+  const revised = document.getElementById('revised-text').value.trim();
+  if (!revised) { alert('请先写出修改稿'); return; }
+  
+  const oldDiag = state.diagnosis;
+  document.getElementById('student-text').value = revised;
+  state.studentText = revised;
+  
+  const out = document.getElementById('rediagnose-output');
+  out.classList.remove('hidden');
+  out.querySelector('#rediagnose-content').innerHTML = '<p class="ai-thinking text-sm" style="color:var(--ink-muted);">第二轮评分中</p>';
+  
+  // call diagnose silently
+  try {
+    const result = await callDeepSeek([
+      {
+        role: 'system',
+        content: `你是高考英语读后续写评分老师。按四维评分,输出严格 JSON,字段同前一次评分(scores/total/level/tier/strengths/sentence_issues/overall)。`,
+      },
+      {
+        role: 'user',
+        content: `【原文】\n${state.passage}\n\n【修改稿】\n${revised}\n\n请重新评分。`,
+      },
+    ], { json: true, demoKey: 'rediagnose', temperature: 0.3 });
+    
+    let data;
+    try { data = JSON.parse(result); }
+    catch { data = JSON.parse(result.match(/\{[\s\S]*\}/)[0]); }
+    
+    const delta = data.total - oldDiag.total;
+    const deltaColor = delta > 0 ? 'var(--jade)' : delta < 0 ? 'var(--vermillion)' : 'var(--ink-muted)';
+    const deltaSign = delta > 0 ? '+' : '';
+    
+    out.querySelector('#rediagnose-content').innerHTML = `
+      <div class="grid grid-cols-3 gap-4 mb-4">
+        <div class="paper-card p-4 text-center">
+          <div class="text-xs" style="color:var(--ink-muted);">第一轮</div>
+          <div class="font-display text-3xl tnum" style="color:var(--ink-muted);">${oldDiag.total.toFixed(1)}</div>
+        </div>
+        <div class="paper-card p-4 text-center" style="background:var(--paper-2);">
+          <div class="text-xs" style="color:var(--ink-muted);">提升</div>
+          <div class="font-display text-3xl tnum" style="color:${deltaColor};">${deltaSign}${delta.toFixed(1)}</div>
+        </div>
+        <div class="paper-card p-4 text-center" style="background:rgba(74,124,89,.06);">
+          <div class="text-xs" style="color:var(--ink-muted);">第二轮</div>
+          <div class="font-display text-3xl tnum" style="color:var(--jade);">${data.total.toFixed(1)}</div>
+        </div>
+      </div>
+      <p class="text-sm font-serif-cn" style="color:var(--ink-soft);">${escapeHtml(data.overall || '')}</p>
+    `;
+    state.diagnosis = data;
+  } catch (e) {
+    out.querySelector('#rediagnose-content').innerHTML = `<p class="text-sm" style="color:var(--vermillion);">第二轮诊断失败:${e.message}</p>`;
+  }
+}
+
+/* ============================================================
+   DEMO RESPONSES (when no API key + demo mode on)
+============================================================ */
+function getDemoResponse(key) {
+  const demos = {
+    guidance: `1. 当 Gunter 听到"现金机也坏了"时,他的第一反应可能是什么?是惊讶、为难还是温暖一笑?(suggested: a knowing smile / unhesitatingly)
+
+2. 在被陌生人信任的瞬间,"我"的内心会经历怎样的转变?(从急切/绝望 → 不可置信 → 感激)
+
+3. Gunter 提出"先上车,回来再付"这一选择时,你打算用怎样的细节凸显他的善意?(具体动作:写下电话号码?手势?眼神?)
+
+4. 第一段如何与首句"I ran back to Gunter and told him the bad news"形成情绪起伏的张力?(不要太快滑向解决方案,先让"我"经历真实的窘迫)
+
+5. 第二段四天后的回访,你想呈现的是单纯的还钱,还是有更深的情感呼应?(感谢方式、礼物、对话内容、未来联系)
+
+6. 全文最后一句要呼应原文中"the best taxi driver"这一隐含主题——你打算用怎样的概括性句子收尾?(不要直接复述,试用一个具有人生感悟的句子)
+
+7. 在两段中分别埋一个伏笔与呼应:第一段的小细节(如电话号码写在纸上)如何在第二段被重新提及?`,
+    
+    diagnose: JSON.stringify({
+      scores: { rapport: 4.8, richness: 4.2, accuracy: 5.0, coherence: 4.5 },
+      total: 18.5,
+      level: '第四档(16-20分)',
+      tier: 4,
+      strengths: [
+        '"a complete stranger was willing to trust me" 准确捕捉了原文的核心情感主题——陌生人之间的信任',
+        '使用了 "thankful and a little guilty" 这类复合情感词,体现了人物心理的层次',
+        '第二段以友谊延续作结,与原文 "the best taxi driver" 主题形成自然呼应'
+      ],
+      sentence_issues: [
+        {
+          sentence: 'He listened carefully and his face showed a kind smile.',
+          dimension: 'richness',
+          issue: '动作描写过于简单,缺乏具体细节,未能凸显 Gunter 此刻的人物魅力',
+          suggestion: '可加入更具体的微表情或动作:如 "leaning forward" / "patting my shoulder",让"善良"被"看见"而非被"陈述"'
+        },
+        {
+          sentence: '"Don\'t worry," he said softly. "Just take the bus first. You can pay me when you come back to Vienna."',
+          dimension: 'rapport',
+          issue: '直接陈述解决方案,与原文"先有曲折再有温暖"的情绪节奏略不匹配',
+          suggestion: '考虑在 Gunter 给出方案前加一个停顿/思考的瞬间,更符合原文中他"翻找电话""指向取款机"等"主动想办法"的人物特征'
+        },
+        {
+          sentence: 'I was very surprised by his words.',
+          dimension: 'accuracy',
+          issue: '"very surprised" 表达直白,词汇丰富度偏低,与全文情感强度不匹配',
+          suggestion: '替换为更精准的表达,如 "stunned" / "taken aback" / "lost for words",并可补充具体心理描写'
+        },
+        {
+          sentence: 'From that day on, we became good friends.',
+          dimension: 'coherence',
+          issue: '段间过渡跳跃过快,从"还钱+礼物"直接跳到"成为朋友",缺少情感累积的过程',
+          suggestion: '中间补充一两句对话或共同经历的细节,让"友情形成"显得自然而非概括性陈述'
+        },
+        {
+          sentence: 'His kindness made me believe that there is still trust and warmth between strangers in this busy world.',
+          dimension: 'richness',
+          issue: '收尾立意正确但表达较为常规,缺乏"独属于这个故事"的画面感',
+          suggestion: '尝试用一个具体意象收尾,如把 Gunter 的微笑、电话号码的纸片、维也纳的雨夜等作为情感载体,而非直接抒情'
+        }
+      ],
+      overall: '续写紧扣原文"信任"主题,情节完整、结构清晰,语言基本准确,属于第四档中等水平。主要短板在于细节描写偏简、情感推进略显平直,优化空间集中在"内容丰富性"与"段间过渡"两个维度。',
+    }),
+    
+    scaffold: `### 问题定位清单
+
+1. **段一第3句** "He listened carefully and his face showed a kind smile" — 动作过于扁平,未让 Gunter 的人物魅力被"看见"
+
+2. **段一第4句** "Don't worry, he said softly..." — 解决方案给出过快,缺少原文式的"先想办法再温暖"节奏
+
+3. **段二段间过渡** 从"还钱+礼物"直接跳到"成为朋友",情感累积不足
+
+4. **段二尾句** 抒情直白,缺乏画面感意象,未能形成记忆点
+
+### 对标范文片段
+
+**范文片段一(对标 21-25 分档,与原文情节匹配):**
+"Gunter paused, glanced at the bus that was about to pull away, then turned back to me with that same easy smile. 'Take the bus,' he said, scribbling his number on the back of his receipt. 'You can wire it to me when you get home.' For a moment I just stood there, the rain still dripping from my hair. *他主动走出一步去解决问题,而不是等"我"开口求助 — 这正是原文中"fishing out his phone to call a friend"那种善意的延续。*"
+
+**范文片段二(对标 21-25 分档,情感收束):**
+"Whenever someone tells me strangers can't be trusted, I think of that piece of receipt — a phone number, a name, and the rain in Vienna that night. *用一个具体意象(收据/电话号码/维也纳的雨)代替抽象抒情,让结尾有画面、有温度、有回响。*"
+
+### 自改提示语
+
+1. **段一第3句的修改方向**:加入 1 个"看得见"的微动作(如倾身、拍肩、扫视手表),让善良被动作而非形容词承载。可考虑用 "leaning slightly forward" / "with a glance at the departing bus" 等结构。
+
+2. **段一情绪节奏**:在 Gunter 给出方案前,插入一个短暂的"思考/犹豫"片刻,让他像原文那样"主动想办法",而非"立即给答案"。
+
+3. **段二过渡**:在"还钱+礼物"和"成为朋友"之间,补 1-2 句具体场景或对话(如他坚持请你喝咖啡、你们聊起各自的家乡),让友情有"形成的瞬间"。
+
+4. **结尾改造**:抛弃 "His kindness made me believe..." 这类直陈,改用具体物象作为情感载体。可参考"每当...我就想起..."的句式结构,把抽象信任锚定在某个画面上。`,
+    
+    rediagnose: JSON.stringify({
+      scores: { rapport: 5.4, richness: 5.2, accuracy: 5.3, coherence: 5.1 },
+      total: 21.0,
+      level: '第五档(21-25分)',
+      tier: 5,
+      strengths: [
+        '段一通过"glanced at the bus"等具体动作让 Gunter 的善意"被看见"',
+        '结尾用"the receipt with his number"作为具体意象,情感收束有画面感',
+        '段间过渡新增的对话场景使友情形成更自然'
+      ],
+      sentence_issues: [],
+      overall: '修改稿在"内容丰富性"与"上下文连贯性"两个维度提升明显,从第四档进入第五档。细节描写更具张力,情感推进更显层次。',
+    }),
+  };
+  return demos[key] || '(演示模式: 未匹配示例)';
+}
+
+/* ---------- BOOT ---------- */
+init();
+</script>
+
+</body>
+</html>

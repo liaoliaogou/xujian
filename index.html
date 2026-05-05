@@ -246,6 +246,80 @@
     font-size: 13.5px;
     margin-bottom: 6px;
   }
+
+  .metric-card {
+    background: white;
+    border: 1px solid var(--rule);
+    border-left: 3px solid var(--vermillion);
+    border-radius: 0 4px 4px 0;
+    padding: 16px 18px;
+  }
+  .metric-value {
+    font-family: 'DM Serif Display', serif;
+    font-size: 36px;
+    line-height: 1;
+    color: var(--ink);
+    font-variant-numeric: tabular-nums;
+  }
+  .metric-label {
+    color: var(--ink-muted);
+    font-size: 12px;
+    letter-spacing: .7px;
+    margin-bottom: 8px;
+  }
+  .mini-bar {
+    height: 8px;
+    background: var(--paper-2);
+    border-radius: 6px;
+    overflow: hidden;
+  }
+  .mini-bar > span {
+    display: block;
+    height: 100%;
+    background: linear-gradient(to right, var(--vermillion), var(--gold));
+    border-radius: 6px;
+  }
+  .insight-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(210px, 1fr));
+    gap: 14px;
+  }
+  .insight-card {
+    border: 1px solid var(--rule);
+    background: white;
+    border-radius: 4px;
+    padding: 14px 16px;
+  }
+  .model-card {
+    border: 1px solid var(--rule);
+    border-top: 3px solid var(--gold);
+    background: white;
+    border-radius: 4px;
+    padding: 16px;
+  }
+  .record-row {
+    border: 1px solid var(--rule);
+    background: white;
+    border-radius: 4px;
+    padding: 16px;
+  }
+  .issue-tag {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 5px 9px;
+    border-radius: 999px;
+    background: var(--paper-2);
+    color: var(--ink-soft);
+    font-size: 12px;
+    margin: 0 6px 6px 0;
+  }
+  .lecture-block {
+    border-left: 3px solid var(--navy);
+    background: rgba(29,53,87,.04);
+    padding: 16px 18px;
+    border-radius: 0 4px 4px 0;
+  }
   
   .modal-backdrop {
     background: rgba(26, 29, 36, 0.5);
@@ -309,7 +383,7 @@
         <div>
           <div class="flex items-baseline gap-3">
             <h1 class="font-serif-cn text-3xl font-bold tracking-wide" style="color:var(--ink);">续 见</h1>
-            <span class="text-xs tnum" style="color:var(--ink-muted);">XÙ JIÀN · v0.9</span>
+            <span class="text-xs tnum" style="color:var(--ink-muted);">XÙ JIÀN · V.2</span>
           </div>
           <p class="text-sm font-serif-cn mt-1" style="color:var(--ink-muted);">
             基于高考评分标准的高中英语读后续写伴学智能体
@@ -330,17 +404,23 @@
 <!-- ========== TAB NAV ========== -->
 <div class="sticky top-0 z-20" style="background: rgba(250,246,238,0.92); backdrop-filter: blur(8px); border-bottom: 1px solid var(--rule);">
   <div class="max-w-6xl mx-auto px-6">
-    <nav class="flex">
-      <button class="tab-btn active px-6 py-4 text-sm font-medium" data-tab="1">
+    <nav class="flex overflow-x-auto">
+      <button class="tab-btn active px-5 py-4 text-sm font-medium whitespace-nowrap" data-tab="1">
         <span class="font-serif-cn">①</span> &nbsp;写前引导
       </button>
-      <button class="tab-btn px-6 py-4 text-sm font-medium" data-tab="2">
+      <button class="tab-btn px-5 py-4 text-sm font-medium whitespace-nowrap" data-tab="2">
         <span class="font-serif-cn">②</span> &nbsp;写后诊断
       </button>
-      <button class="tab-btn px-6 py-4 text-sm font-medium" data-tab="3">
+      <button class="tab-btn px-5 py-4 text-sm font-medium whitespace-nowrap" data-tab="3">
         <span class="font-serif-cn">③</span> &nbsp;自主改稿
       </button>
-      <button class="tab-btn px-6 py-4 text-sm font-medium ml-auto" data-tab="4">
+      <button class="tab-btn px-5 py-4 text-sm font-medium whitespace-nowrap" data-tab="5">
+        成长档案
+      </button>
+      <button class="tab-btn px-5 py-4 text-sm font-medium whitespace-nowrap" data-tab="6">
+        教师看板
+      </button>
+      <button class="tab-btn px-5 py-4 text-sm font-medium whitespace-nowrap ml-auto" data-tab="4">
         关于本工具
       </button>
     </nav>
@@ -350,6 +430,34 @@
 <!-- ========== MAIN ========== -->
 <main class="max-w-6xl mx-auto px-6 py-10">
 
+<div class="paper-card p-5 mb-8">
+  <div class="flex flex-wrap items-center justify-between gap-3 mb-4">
+    <div>
+      <span class="badge badge-jade">当前学生档案</span>
+      <h3 class="font-serif-cn text-lg font-bold mt-2" style="color:var(--ink);">先选择学生,再完成诊断与归档</h3>
+      <p class="text-sm mt-1" style="color:var(--ink-muted);">写前引导、写后诊断、改稿记录和 Word 报告都会绑定到当前学生。</p>
+    </div>
+    <div class="flex flex-wrap gap-2">
+      <select id="record-picker" onchange="selectRecord(this.value)" class="input-paper text-sm" style="width:220px;"></select>
+      <button onclick="startNewRecord()" class="btn-ghost px-4 py-2 rounded text-sm">新建档案</button>
+    </div>
+  </div>
+  <div class="grid grid-cols-1 md:grid-cols-3 gap-3">
+    <div>
+      <label class="text-xs font-semibold block mb-1" style="color:var(--ink-muted);">学生编号</label>
+      <input id="student-id" class="input-paper text-sm" value="A01" placeholder="如 A01 / 高二1班-07" />
+    </div>
+    <div>
+      <label class="text-xs font-semibold block mb-1" style="color:var(--ink-muted);">班级</label>
+      <input id="class-id" class="input-paper text-sm" value="高二1班" placeholder="如 高二1班" />
+    </div>
+    <div>
+      <label class="text-xs font-semibold block mb-1" style="color:var(--ink-muted);">训练主题</label>
+      <input id="training-title" class="input-paper text-sm" value="2024新高考I/II卷读后续写" placeholder="本次作文训练名称" />
+    </div>
+  </div>
+</div>
+
 <!-- =========== TAB 1 写前引导 =========== -->
 <section id="tab-1" class="tab-content">
   <div class="mb-7">
@@ -358,6 +466,20 @@
     <p class="text-sm mt-2 font-serif-cn" style="color:var(--ink-muted); max-width: 640px;">
       智能体阅读你提供的原文与段落首句后,会通过 5–7 个结构化追问引导你完成情节、情绪、伏笔与细节的构思。<strong style="color:var(--vermillion-deep);">全程不会输出任何完整英文续写句子</strong>,这是写作能力培养的伦理边界。
     </p>
+  </div>
+
+  <div class="paper-card p-5 mb-5">
+    <div class="flex flex-wrap items-center justify-between gap-3">
+      <div>
+        <span class="badge badge-navy">原文语境分析</span>
+        <h3 class="font-serif-cn text-lg font-bold mt-2" style="color:var(--ink);">先读懂故事,再进入续写</h3>
+        <p class="text-sm mt-1" style="color:var(--ink-muted);">自动提取人物关系、核心冲突、情绪曲线、伏笔线索和续写边界,帮助学生避免偏题与乱编。</p>
+      </div>
+      <button id="btn-context" onclick="startContextAnalysis()" class="btn-ghost px-5 py-2.5 rounded text-sm">生成语境分析</button>
+    </div>
+    <div id="context-output" class="hidden mt-5 reveal">
+      <div id="context-content" class="insight-grid"></div>
+    </div>
   </div>
 
   <div class="grid grid-cols-1 lg:grid-cols-2 gap-5 mb-5">
@@ -512,6 +634,24 @@
     </p>
   </div>
 
+  <div class="paper-card p-6 mb-6">
+    <div class="flex flex-wrap items-center justify-between gap-3 mb-4">
+      <div>
+        <span class="badge badge-gold">高一档范文参照</span>
+        <h3 class="font-serif-cn text-lg font-bold mt-2" style="color:var(--ink);">评分锚点与可迁移表达</h3>
+      </div>
+      <div class="flex items-center gap-2">
+        <select id="library-tier" onchange="renderModelLibrary()" class="input-paper text-sm" style="width:160px;">
+          <option value="3">第三档 11-15分</option>
+          <option value="4">第四档 16-20分</option>
+          <option value="5">第五档 21-25分</option>
+        </select>
+        <button onclick="useCurrentTierForLibrary()" class="btn-ghost px-4 py-2 rounded text-sm">按当前诊断推荐</button>
+      </div>
+    </div>
+    <div id="model-library-cards" class="grid grid-cols-1 lg:grid-cols-3 gap-4"></div>
+  </div>
+
   <div id="no-diagnose-hint" class="paper-card p-8 text-center">
     <p class="text-sm" style="color:var(--ink-muted);">请先在「写后诊断」中提交一次评分,再回到此处获取改稿支架。</p>
     <button onclick="switchTab('2')" class="btn-ghost px-5 py-2 rounded text-sm mt-4">前往写后诊断</button>
@@ -567,11 +707,99 @@
 </section>
 
 
+<!-- =========== TAB 5 成长档案 =========== -->
+<section id="tab-5" class="tab-content hidden">
+  <div class="mb-7">
+    <span class="section-num">— STUDENT PORTFOLIO —</span>
+    <h2 class="font-serif-cn text-2xl font-bold mt-2" style="color:var(--ink);">写作成长档案</h2>
+    <p class="text-sm mt-2 font-serif-cn" style="color:var(--ink-muted); max-width: 680px;">
+      自动沉淀每次“初稿诊断—自主改稿—二次诊断”的关键数据,形成可查看、可导出、可持续追加的学生写作成长记录。
+    </p>
+  </div>
+
+  <div class="grid grid-cols-1 md:grid-cols-4 gap-4 mb-5">
+    <div class="metric-card">
+      <div class="metric-label">PORTFOLIOS · 档案数</div>
+      <div id="archive-count" class="metric-value">0</div>
+    </div>
+    <div class="metric-card" style="border-left-color:var(--jade);">
+      <div class="metric-label">AVG GAIN · 平均提升</div>
+      <div id="archive-delta" class="metric-value">0.0</div>
+    </div>
+    <div class="metric-card" style="border-left-color:var(--gold);">
+      <div class="metric-label">REVISION · 二改完成率</div>
+      <div id="archive-rate" class="metric-value">0%</div>
+    </div>
+    <div class="metric-card" style="border-left-color:var(--navy);">
+      <div class="metric-label">TOP GROWTH · 进步维度</div>
+      <div id="archive-best-dim" class="text-lg font-semibold" style="color:var(--ink);">—</div>
+    </div>
+  </div>
+
+  <div class="paper-card p-5 mb-5">
+    <div class="flex flex-wrap items-center justify-between gap-3">
+      <div>
+        <h3 class="font-serif-cn text-lg font-bold" style="color:var(--ink);">一键导出材料</h3>
+        <p class="text-sm mt-1" style="color:var(--ink-muted);">Word报告适合用于形成性评价、家校沟通和教学诊断;CSV可作为班级数据备份。</p>
+      </div>
+      <div class="flex flex-wrap gap-2">
+        <button onclick="downloadCurrentWordReport()" class="btn-primary px-4 py-2 rounded text-sm">导出当前学生Word报告</button>
+        <button onclick="downloadClassCsv()" class="btn-ghost px-4 py-2 rounded text-sm">导出班级CSV</button>
+      </div>
+    </div>
+  </div>
+
+  <div id="record-list" class="space-y-4"></div>
+</section>
+
+
+<!-- =========== TAB 6 教师看板 =========== -->
+<section id="tab-6" class="tab-content hidden">
+  <div class="mb-7">
+    <span class="section-num">— TEACHER DASHBOARD —</span>
+    <h2 class="font-serif-cn text-2xl font-bold mt-2" style="color:var(--ink);">教师端班级看板</h2>
+    <p class="text-sm mt-2 font-serif-cn" style="color:var(--ink-muted); max-width: 700px;">
+      基于学生诊断记录自动汇总班级表现,帮助教师从逐句批改转向精准讲评与分层指导。
+    </p>
+  </div>
+
+  <div id="dashboard-summary" class="grid grid-cols-1 md:grid-cols-4 gap-4 mb-5"></div>
+
+  <div class="grid grid-cols-1 lg:grid-cols-2 gap-5 mb-5">
+    <div class="paper-card p-6">
+      <div class="flex items-center justify-between mb-4">
+        <h3 class="font-serif-cn text-lg font-bold" style="color:var(--ink);">四维薄弱点</h3>
+        <span class="badge badge-navy">班级均值</span>
+      </div>
+      <div id="dashboard-dimensions" class="space-y-4"></div>
+    </div>
+    <div class="paper-card p-6">
+      <div class="flex items-center justify-between mb-4">
+        <h3 class="font-serif-cn text-lg font-bold" style="color:var(--ink);">高频问题标签</h3>
+        <span class="badge badge-vermillion">讲评依据</span>
+      </div>
+      <div id="dashboard-issues"></div>
+    </div>
+  </div>
+
+  <div class="paper-card p-6">
+    <div class="flex flex-wrap items-center justify-between gap-3 mb-4">
+      <div>
+        <h3 class="font-serif-cn text-lg font-bold" style="color:var(--ink);">课堂讲评自动生成</h3>
+        <p class="text-sm mt-1" style="color:var(--ink-muted);">根据班级数据生成本次讲评重点、微练习和课后任务,用于展示教师减负增效。</p>
+      </div>
+      <button onclick="generateLecturePlan()" class="btn-primary px-5 py-2.5 rounded text-sm">生成本次讲评</button>
+    </div>
+    <div id="lecture-output" class="lecture-block hidden"></div>
+  </div>
+</section>
+
+
 <!-- =========== TAB 4 关于 =========== -->
 <section id="tab-4" class="tab-content hidden">
   <div class="mb-8">
     <span class="section-num">— ABOUT —</span>
-    <h2 class="font-serif-cn text-2xl font-bold mt-2" style="color:var(--ink);">"续见" · 设计理念与技术架构</h2>
+    <h2 class="font-serif-cn text-2xl font-bold mt-2" style="color:var(--ink);">“续见” · 设计理念与技术架构</h2>
   </div>
 
   <div class="grid grid-cols-1 lg:grid-cols-2 gap-5 mb-5">
@@ -580,16 +808,16 @@
       <ul class="text-sm space-y-2 font-serif-cn" style="color:var(--ink-soft); list-style:disc; padding-left:18px;">
         <li><strong>批改慢:</strong>一个班 50+ 学生,一篇精批 5–8 分钟,反馈周期常达数日</li>
         <li><strong>反馈慢:</strong>作文发回时学生记忆热度已退,多数只看分数不看批注</li>
-        <li><strong>迭代慢:</strong>"一次终稿"成常态,但写作能力恰恰来自反复修改</li>
+        <li><strong>迭代慢:</strong>“一次终稿”成常态,但写作能力恰恰来自反复修改</li>
         <li><strong>评分脱节:</strong>通用 AI 工具偏重语法,忽视读后续写真正的核心维度——<em>与原文融洽度、内容丰富性</em></li>
       </ul>
     </div>
     <div class="paper-card p-6">
       <h3 class="font-serif-cn text-lg font-bold mb-3" style="color:var(--ink);">解决路径</h3>
       <ul class="text-sm space-y-2 font-serif-cn" style="color:var(--ink-soft); list-style:disc; padding-left:18px;">
-        <li><strong>评价对标高考:</strong>RAG 接入官方评分量表与历年评分细则</li>
-        <li><strong>守住"不代写":</strong>仅提供思维支架,不输出完整续写句</li>
-        <li><strong>分档范文匹配:</strong>"比当前水平高一档"精准推送</li>
+        <li><strong>评价对标高考:</strong>轻量级知识库内嵌官方评分量表与历年评分细则</li>
+        <li><strong>守住“不代写”:</strong>仅提供思维支架,不输出完整续写句</li>
+        <li><strong>分档范文匹配:</strong>“比当前水平高一档”精准推送</li>
         <li><strong>闭环可沉淀:</strong>每次评分自动归档,形成可视化写作成长档案</li>
       </ul>
     </div>
@@ -607,8 +835,8 @@
         <p style="color:var(--ink-soft);">DeepSeek-V3(国产,中英文综合推理),通过 OpenAI 兼容接口调用</p>
       </div>
       <div>
-        <div class="text-xs mb-1" style="color:var(--ink-muted); letter-spacing:1px;">RAG · 知识库</div>
-        <p style="color:var(--ink-soft);">新课标评分量表 + 真题与官方细则 + 分级范文库 + 错误类型库</p>
+        <div class="text-xs mb-1" style="color:var(--ink-muted); letter-spacing:1px;">KNOWLEDGE · 知识库</div>
+        <p style="color:var(--ink-soft);">评分量表 + 真题细则 + 分级范文参照 + 错误类型库,以提示词约束和本地结构化数据方式轻量实现</p>
       </div>
     </div>
     <div class="rule-line my-5"></div>
@@ -618,7 +846,7 @@
 你是一位熟悉新高考英语读后续写评分标准、坚持启发式教学的英语写作教练。
 
 ## 核心约束(不可违反)
-1. 严格守住"不代写"边界,绝不输出任何完整的英文续写句子
+1. 严格守住“不代写”边界,绝不输出任何完整的英文续写句子
 2. 反馈必须定位到具体句子序号
 3. 范文推送需比学生当前水平高一档(22-25/18-21/14-17 三档)
 4. 评分依据《普通高中英语课程标准(2017年版2020年修订)》读后续写量表
@@ -637,8 +865,8 @@
     <ul class="text-sm space-y-2 font-serif-cn" style="color:var(--ink-soft); list-style:disc; padding-left:18px;">
       <li>本工具基于<strong>国产大模型</strong>(DeepSeek)开发,符合《生成式人工智能服务管理暂行办法》要求</li>
       <li>学生作品在评分时不存储原文,仅传输至模型进行单次推理后即清除</li>
-      <li>AI 生成的反馈、范文均带有"AI生成"标识</li>
-      <li>不输出完整英文续写,落实<em>"以人为本"</em>的教育伦理</li>
+      <li>AI 生成的反馈、范文均带有“AI生成”标识</li>
+      <li>不输出完整英文续写,落实<em>“以人为本”</em>的教育伦理</li>
     </ul>
   </div>
 
@@ -665,13 +893,13 @@
     </p>
     <input id="api-key-input" type="password" class="input-paper" placeholder="sk-xxxxxxxxxxxxxxxxxxxxxxxx" />
     <p class="text-xs mt-2" style="color:var(--ink-muted);">
-      ⚠ 出于安全考虑,Key 只保存在当前页面内存,刷新后需重新输入。
+      Key 会保存在当前浏览器本机存储中,不会写入 HTML 源码;如需清除,删除输入框内容后保存即可。
     </p>
     <div class="rule-line my-5"></div>
     <div class="flex items-center justify-between">
       <label class="flex items-center gap-2 text-sm" style="color:var(--ink-soft);">
         <input type="checkbox" id="demo-mode" />
-        <span>启用演示模式(无 Key 时使用预设回答)</span>
+        <span>启用离线体验模式(无 Key 时使用预设回答)</span>
       </label>
     </div>
     <div class="flex gap-3 mt-5">
@@ -699,18 +927,178 @@ const SAMPLE_ESSAY = `I ran back to Gunter and told him the bad news. He listene
 
 Four days later, when I was back in Vienna, I called Gunter as promised. He came to pick me up at the airport with the same warm smile. I gave him the money and also a small gift from Prague to thank him. He was happy to see me again and we had a long talk in his taxi. From that day on, we became good friends. Every time I visited Vienna, Gunter was the first person I would call. His kindness made me believe that there is still trust and warmth between strangers in this busy world.`;
 
+const DIMENSIONS = [
+  { key: 'rapport', label: '与原文融洽度' },
+  { key: 'richness', label: '内容丰富性' },
+  { key: 'accuracy', label: '语言准确性' },
+  { key: 'coherence', label: '上下文连贯性' },
+];
+
+const STORAGE_KEY = 'xujian-v2-writing-records';
+const API_KEY_STORAGE_KEY = 'xujian-v2-deepseek-key';
+
+const MODEL_LIBRARY = {
+  3: [
+    {
+      title: '第三档范例 · 情节基本完整',
+      score: '13/25',
+      text: `Gunter said I could go first and pay him later. I was very thankful and got on the bus quickly. Four days later, I came back and gave him the money. We were both happy and I would never forget him.`,
+      comment: '情节完整,但人物动作、心理变化和原文伏笔呼应较少,表达多为概括性叙述。',
+      imitate: '适合基础学生先保证“两段首句衔接”和“故事不跑偏”。'
+    },
+    {
+      title: '第三档锚点 · 常见问题',
+      score: '11-15分',
+      text: `The story is clear, but the kindness of Gunter is mostly told, not shown. The ending explains the theme directly without a memorable image.`,
+      comment: '这一档不是“错很多”,而是“细节不够、情绪推进不够”。',
+      imitate: '修改目标:每段至少补一个动作细节和一个心理变化。'
+    },
+    {
+      title: '第三档提升方向',
+      score: '目标第四档',
+      text: `Add a short pause before Gunter offers help; add one concrete object such as a receipt, phone number, bus ticket, or rainy evening.`,
+      comment: '从第三档到第四档,关键不是堆高级词,而是把“善意”写成可见的画面。',
+      imitate: '让学生先改“空泛句”,例如 very happy / very thankful / good friends。'
+    }
+  ],
+  4: [
+    {
+      title: '第四档范例 · 细节更清楚',
+      score: '18/25',
+      text: `Gunter looked at the bus, then at my helpless face. After a short silence, he wrote his phone number on a small receipt and said, "Take the bus first. You can call me when you return." I stood there, too moved to say a word.`,
+      comment: '能看到动作、停顿和心理变化,与原文中 Gunter 主动帮忙的形象比较一致。',
+      imitate: '可模仿“动作 + 话语 + 心理反应”的三步写法。'
+    },
+    {
+      title: '第四档锚点 · 还差什么',
+      score: '16-20分',
+      text: `The plot is reasonable and the language is mostly accurate, but the ending may still sound general if it only says kindness is important.`,
+      comment: '第四档常见短板是结尾立意正确但画面感不足。',
+      imitate: '结尾可以回扣 receipt / phone number / Vienna rain 等具体意象。'
+    },
+    {
+      title: '第四档提升方向',
+      score: '目标第五档',
+      text: `Build a small echo: the number written on the receipt in Paragraph 1 appears again in Paragraph 2 when the narrator calls Gunter.`,
+      comment: '第五档往往胜在“伏笔回收”和“情感回响”,不是单纯更长。',
+      imitate: '让学生检查第二段是否回应了第一段埋下的物件或承诺。'
+    }
+  ],
+  5: [
+    {
+      title: '第五档范例 · 伏笔回响',
+      score: '22/25',
+      text: `Gunter paused, glanced at the thinning queue, and tore a corner from his receipt. On it he wrote his number with quick, firm strokes. "Go," he said, pressing it into my hand. "Some journeys should not be missed because of a broken machine."`,
+      comment: '动作具体,人物语言自然,并把“坏掉的取款机”和“不能错过的旅程”形成温暖呼应。',
+      imitate: '适合高水平学生学习“物象 + 人物语言 + 主题暗示”的写法。'
+    },
+    {
+      title: '第五档结尾 · 画面收束',
+      score: '21-25分',
+      text: `Years later, whenever I doubt the kindness of strangers, I still think of that rain-soaked receipt in Vienna, carrying not a debt, but a quiet lesson in trust.`,
+      comment: '没有直接喊主题,而是用 receipt 和 Vienna 把信任落在具体画面上。',
+      imitate: '结尾少用空泛总结,多用能被记住的物象。'
+    },
+    {
+      title: '第五档锚点 · 评分理由',
+      score: '21-25分',
+      text: `The continuation develops the plot naturally, preserves the character of Gunter, enriches emotional details, and closes with an image that echoes the source text.`,
+      comment: '这一档的核心是融洽、丰富、准确、连贯四项同时稳定。',
+      imitate: '提醒学生:高分不是“华丽”,而是“合情合理且有回味”。'
+    }
+  ]
+};
+
+const DEFAULT_RECORDS = [
+  { id: 'A01', className: '高二1班', title: 'Gunter信任主题续写', date: '2026-04-22',
+    first: { total: 14.2, tier: 3, scores: { rapport: 3.5, richness: 3.1, accuracy: 4.0, coherence: 3.6 }, issues: ['细节描写不足', '结尾抒情直白', '伏笔呼应不足'] },
+    second: { total: 18.6, tier: 4, scores: { rapport: 4.7, richness: 4.5, accuracy: 4.8, coherence: 4.6 } },
+    notes: '二稿补充了收据和电话号码两个物象,情节更自然。' },
+  { id: 'A02', className: '高二1班', title: 'Gunter信任主题续写', date: '2026-04-22',
+    first: { total: 16.8, tier: 4, scores: { rapport: 4.0, richness: 3.9, accuracy: 4.8, coherence: 4.1 }, issues: ['人物语言不够贴合', '情感推进偏快', '段间过渡略跳'] },
+    second: { total: 20.4, tier: 4, scores: { rapport: 5.1, richness: 4.8, accuracy: 5.3, coherence: 5.2 } },
+    notes: '能根据诊断主动补充人物对话,但结尾仍可更有画面感。' },
+  { id: 'A03', className: '高二1班', title: 'Gunter信任主题续写', date: '2026-04-22',
+    first: { total: 12.7, tier: 3, scores: { rapport: 3.0, richness: 2.8, accuracy: 3.7, coherence: 3.2 }, issues: ['情节解决过快', '动作描写单薄', '语言错误较多'] },
+    second: { total: 17.5, tier: 4, scores: { rapport: 4.4, richness: 4.1, accuracy: 4.5, coherence: 4.5 } },
+    notes: '经过支架提示后,二稿能把“帮助”写成具体动作。' },
+  { id: 'A04', className: '高二1班', title: 'Gunter信任主题续写', date: '2026-04-22',
+    first: { total: 16.8, tier: 4, scores: { rapport: 4.3, richness: 3.8, accuracy: 4.7, coherence: 4.0 }, issues: ['细节描写可再丰富', '结尾缺少独特意象', '友情形成略突兀'] },
+    second: { total: 19.4, tier: 4, scores: { rapport: 4.9, richness: 4.7, accuracy: 4.9, coherence: 4.9 } },
+    notes: '二稿补充了人物动作和结尾物象,但仍可继续打磨语言自然度。' },
+  { id: 'A05', className: '高二1班', title: 'Gunter信任主题续写', date: '2026-04-22',
+    first: { total: 10.6, tier: 2, scores: { rapport: 2.5, richness: 2.2, accuracy: 3.1, coherence: 2.8 }, issues: ['原文衔接不足', '段落首句回应弱', '语法错误较多'] },
+    second: { total: 15.2, tier: 3, scores: { rapport: 3.8, richness: 3.5, accuracy: 4.0, coherence: 3.9 } },
+    notes: '先解决跑题与段落首句衔接问题,提分明显。' },
+  { id: 'A06', className: '高二1班', title: 'Gunter信任主题续写', date: '2026-04-22',
+    first: { total: 19.1, tier: 4, scores: { rapport: 4.9, richness: 4.4, accuracy: 5.2, coherence: 4.6 }, issues: ['结尾立意偏泛', '伏笔回收不足'] },
+    second: { total: 22.0, tier: 5, scores: { rapport: 5.5, richness: 5.3, accuracy: 5.6, coherence: 5.6 } },
+    notes: '补充物象回扣后,文章收束更高级。' },
+  { id: 'A07', className: '高二1班', title: 'Gunter信任主题续写', date: '2026-04-22',
+    first: { total: 15.5, tier: 3, scores: { rapport: 3.6, richness: 3.4, accuracy: 4.4, coherence: 4.1 }, issues: ['内容丰富性不足', '心理描写缺位', '主题句空泛'] },
+    second: { total: 18.9, tier: 4, scores: { rapport: 4.5, richness: 4.5, accuracy: 4.9, coherence: 5.0 } },
+    notes: '心理变化从“thankful”扩展为惊讶、羞愧、感激。' },
+  { id: 'A08', className: '高二1班', title: 'Gunter信任主题续写', date: '2026-04-22',
+    first: { total: 17.3, tier: 4, scores: { rapport: 4.2, richness: 4.0, accuracy: 4.7, coherence: 4.4 }, issues: ['段间过渡略跳', '人物语言一般', '动作细节不足'] },
+    second: { total: 19.7, tier: 4, scores: { rapport: 4.9, richness: 4.7, accuracy: 5.0, coherence: 5.1 } },
+    notes: '二稿增加一段简短对话,人物更可信。' },
+  { id: 'A09', className: '高二1班', title: 'Gunter信任主题续写', date: '2026-04-22',
+    first: { total: 13.8, tier: 3, scores: { rapport: 3.2, richness: 3.0, accuracy: 4.2, coherence: 3.4 }, issues: ['故事发展单线', '缺少伏笔', '结尾模板化'] },
+    second: { total: 17.9, tier: 4, scores: { rapport: 4.3, richness: 4.2, accuracy: 4.7, coherence: 4.7 } },
+    notes: '通过高一档参照学习“物象回扣”,结尾质量提升。' },
+  { id: 'A10', className: '高二1班', title: 'Gunter信任主题续写', date: '2026-04-22',
+    first: { total: 20.2, tier: 4, scores: { rapport: 5.0, richness: 4.8, accuracy: 5.4, coherence: 5.0 }, issues: ['高阶表达可更自然', '主题回扣可更含蓄'] },
+    second: { total: 22.7, tier: 5, scores: { rapport: 5.7, richness: 5.5, accuracy: 5.7, coherence: 5.8 } },
+    notes: '第五档学生,主要优化语言自然度和主题含蓄度。' }
+];
+
 const state = {
-  apiKey: '',
+  apiKey: loadStoredApiKey(),
   demoMode: false,
   passage: SAMPLE_PASSAGE,
   openers: SAMPLE_OPENERS,
+  contextAnalysis: null,
   guidance: null,
   diagnosis: null,
   studentText: '',
   scaffold: null,
+  records: loadStoredRecords(),
+  currentRecordId: null,
 };
 
 /* ---------- INIT ---------- */
+function loadStoredRecords() {
+  try {
+    const raw = localStorage.getItem(STORAGE_KEY);
+    if (raw) {
+      const parsed = JSON.parse(raw);
+      if (Array.isArray(parsed) && parsed.length) return parsed;
+    }
+  } catch {}
+  return JSON.parse(JSON.stringify(DEFAULT_RECORDS));
+}
+
+function persistRecords() {
+  try {
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(state.records));
+  } catch {}
+}
+
+function loadStoredApiKey() {
+  try {
+    return localStorage.getItem(API_KEY_STORAGE_KEY) || '';
+  } catch {
+    return '';
+  }
+}
+
+function persistApiKey() {
+  try {
+    if (state.apiKey) localStorage.setItem(API_KEY_STORAGE_KEY, state.apiKey);
+    else localStorage.removeItem(API_KEY_STORAGE_KEY);
+  } catch {}
+}
+
 function init() {
   document.getElementById('passage').value = SAMPLE_PASSAGE;
   document.getElementById('openers').value = SAMPLE_OPENERS;
@@ -721,6 +1109,12 @@ function init() {
   
   document.getElementById('student-text').addEventListener('input', updateWordCount);
   updateWordCount();
+  renderModelLibrary();
+  renderArchive();
+  renderDashboard();
+  renderRecordPicker();
+  selectInitialRecord();
+  updateApiIndicator();
 }
 
 function updateWordCount() {
@@ -734,6 +1128,7 @@ function switchTab(id) {
   document.querySelectorAll('.tab-content').forEach(s => s.classList.toggle('hidden', s.id !== `tab-${id}`));
   
   if (id === '3') {
+    renderModelLibrary();
     if (state.diagnosis) {
       document.getElementById('no-diagnose-hint').classList.add('hidden');
       document.getElementById('revision-section').classList.remove('hidden');
@@ -742,6 +1137,8 @@ function switchTab(id) {
       document.getElementById('revision-section').classList.add('hidden');
     }
   }
+  if (id === '5') renderArchive();
+  if (id === '6') renderDashboard();
   
   window.scrollTo({ top: 0, behavior: 'smooth' });
 }
@@ -768,7 +1165,12 @@ function closeSettings() {
 function saveSettings() {
   state.apiKey = document.getElementById('api-key-input').value.trim();
   state.demoMode = document.getElementById('demo-mode').checked;
-  
+  persistApiKey();
+  updateApiIndicator();
+  closeSettings();
+}
+
+function updateApiIndicator() {
   const indicator = document.getElementById('api-indicator');
   if (state.apiKey) {
     indicator.classList.remove('hidden');
@@ -776,12 +1178,11 @@ function saveSettings() {
     indicator.style.color = 'var(--jade)';
   } else if (state.demoMode) {
     indicator.classList.remove('hidden');
-    indicator.textContent = '● 演示模式';
+    indicator.textContent = '● 离线体验';
     indicator.style.color = 'var(--gold)';
   } else {
     indicator.classList.add('hidden');
   }
-  closeSettings();
 }
 
 /* ---------- DEEPSEEK API ---------- */
@@ -793,7 +1194,7 @@ async function callDeepSeek(messages, opts = {}) {
   }
   
   if (!state.apiKey) {
-    alert('请先在右上角「配置」中设置 DeepSeek API Key,或启用演示模式。');
+    alert('请先在右上角「配置」中设置 DeepSeek API Key,或启用离线体验模式。');
     openSettings();
     throw new Error('No API key');
   }
@@ -827,7 +1228,7 @@ async function callDeepSeek(messages, opts = {}) {
 /* ---------- MARKDOWN ---------- */
 function renderMarkdown(text) {
   if (!text) return '';
-  let html = text.trim();
+  let html = smartQuotes(text.trim());
   // headers
   html = html.replace(/^### (.+)$/gm, '<h3>$1</h3>');
   // bold/italic/code
@@ -856,6 +1257,60 @@ function renderMarkdown(text) {
   if (inOl) out.push('</ol>');
   if (inUl) out.push('</ul>');
   return out.join('');
+}
+
+/* ============================================================
+   STEP 0 - 原文语境分析
+============================================================ */
+async function startContextAnalysis() {
+  const passage = document.getElementById('passage').value.trim();
+  const openers = document.getElementById('openers').value.trim();
+  if (!passage || !openers) { alert('请先填写原文和段落首句'); return; }
+
+  state.passage = passage;
+  state.openers = openers;
+
+  const btn = document.getElementById('btn-context');
+  const original = btn.innerHTML;
+  btn.disabled = true;
+  btn.innerHTML = '<span class="ai-thinking">分析语境中</span>';
+
+  try {
+    const result = await callDeepSeek([
+      {
+        role: 'system',
+        content: `你是一位高中英语读后续写教练。请先帮助学生读懂原文,但不能代写续写。输出必须分为五项:人物关系、核心冲突、情绪曲线、伏笔线索、续写边界。每项用中文概括,每项不超过80字。可以提供关键词,但不要输出完整英文续写句子。`,
+      },
+      {
+        role: 'user',
+        content: `【原文】\n${passage}\n\n【段落首句】\n${openers}\n\n请完成读后续写语境分析。`,
+      },
+    ], { demoKey: 'context', temperature: 0.4 });
+
+    state.contextAnalysis = result;
+    renderContextAnalysis(result);
+  } catch (e) {
+    alert('语境分析失败: ' + e.message);
+  } finally {
+    btn.disabled = false;
+    btn.innerHTML = original;
+  }
+}
+
+function renderContextAnalysis(text) {
+  const labels = ['人物关系', '核心冲突', '情绪曲线', '伏笔线索', '续写边界'];
+  const cards = labels.map(label => {
+    const re = new RegExp(`${label}[：:]?\\s*([\\s\\S]*?)(?=\\n?(?:人物关系|核心冲突|情绪曲线|伏笔线索|续写边界)[：:]|$)`);
+    const match = text.match(re);
+    const body = match ? match[1].replace(/^[-\s]+/, '').trim() : '';
+    return `
+      <div class="insight-card">
+        <div class="badge badge-navy mb-2">${label}</div>
+        <p class="text-sm" style="color:var(--ink-soft); line-height:1.75;">${escapeHtml(body || '待补充')}</p>
+      </div>`;
+  }).join('');
+  document.getElementById('context-content').innerHTML = cards;
+  document.getElementById('context-output').classList.remove('hidden');
 }
 
 /* ============================================================
@@ -944,6 +1399,13 @@ async function startDiagnose() {
 - 6-10 分(第二档):内容部分相关,语言错误较多
 - 1-5 分(第一档):内容偏离主题,语言错误严重
 
+## 评分校准(务必偏严格)
+- 仅仅情节完整、语言基本正确,但细节普通、结尾直白,通常只能给 14-17 分
+- 有较清楚的动作/心理描写,但伏笔回收和情感推进一般,通常给 16-18.5 分
+- 20 分以上必须同时满足:情节自然贴合原文、细节具体有画面、人物语言可信、结尾有回响、语言错误很少
+- 不要因为作文价值观正确、主题温暖就给高分;读后续写更看重“与原文融洽度”和“内容丰富性”
+- 如果学生使用 very happy / very surprised / good friends / kindness is important 等概括表达较多,应降低内容丰富性分数
+
 ## 输出严格遵循以下 JSON schema(不要 markdown 代码块):
 {
   "scores": {
@@ -960,17 +1422,18 @@ async function startDiagnose() {
     {
       "sentence": "<学生原句>",
       "dimension": "<rapport/richness/accuracy/coherence>",
-      "issue": "<问题描述, 中文, 不超过50字>",
-      "suggestion": "<修改方向, 中文, 不直接给改后版本, 不超过60字>"
+      "issue": "<问题描述, 中文, 说明为什么扣分, 不超过90字>",
+      "suggestion": "<修改方向, 中文, 不直接给改后英文句子, 不超过120字>"
     }
   ],
   "overall": "<总评, 中文, 2-3 句>"
 }
 
 ## 重要约束
-- sentence_issues 至少 3 条,最多 6 条,选最值得修改的
+- sentence_issues 至少 5 条,最多 8 条,覆盖四个维度中最值得修改的问题
 - suggestion 字段不允许直接给出改后的英文句子,只能描述修改方向
-- 评分要符合高考真实尺度,不要虚高`,
+- 每条诊断都要落到具体原句,不要只写泛泛而谈的建议
+- 评分要符合高考真实尺度,宁可略严,不要虚高`,
       },
       {
         role: 'user',
@@ -990,6 +1453,9 @@ async function startDiagnose() {
     
     state.diagnosis = data;
     renderDiagnosis(data);
+    recordFirstDiagnosis(data, studentText);
+    renderArchive();
+    renderDashboard();
     document.getElementById('diagnose-output').classList.remove('hidden');
     setTimeout(() => {
       document.getElementById('diagnose-output').scrollIntoView({ behavior: 'smooth', block: 'start' });
@@ -1076,7 +1542,7 @@ function renderDiagnosis(data) {
           <span class="text-xs font-semibold tnum" style="color:var(--ink-muted);">#${idx+1}</span>
           <span class="badge badge-vermillion">${dm.label}</span>
         </div>
-        <p class="text-[13px] mb-2 italic" style="color:var(--ink-soft);">"${escapeHtml(iss.sentence)}"</p>
+        <p class="text-[13px] mb-2 italic" style="color:var(--ink-soft);">“${escapeHtml(iss.sentence)}”</p>
         <p class="text-[13px] mb-1.5"><strong style="color:var(--ink);">问题:</strong> <span style="color:var(--ink-soft);">${escapeHtml(iss.issue)}</span></p>
         <p class="text-[13px]"><strong style="color:var(--ink);">修改方向:</strong> <span style="color:var(--ink-soft);">${escapeHtml(iss.suggestion)}</span></p>
       </div>`;
@@ -1086,7 +1552,11 @@ function renderDiagnosis(data) {
 
 function escapeHtml(s) {
   if (!s) return '';
-  return String(s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+  return smartQuotes(String(s)).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+}
+
+function smartQuotes(s) {
+  return String(s).replace(/"([^"\n]+)"/g, '“$1”');
 }
 
 /* ============================================================
@@ -1189,7 +1659,11 @@ async function rediagnose() {
     const result = await callDeepSeek([
       {
         role: 'system',
-        content: `你是高考英语读后续写评分老师。按四维评分,输出严格 JSON,字段同前一次评分(scores/total/level/tier/strengths/sentence_issues/overall)。`,
+        content: `你是高考英语读后续写评分老师。按四维评分,输出严格 JSON,字段同前一次评分(scores/total/level/tier/strengths/sentence_issues/overall)。
+
+评分要偏严格:仅仅情节完整、语言基本正确,但细节普通、结尾直白,通常只能给 14-17 分;20 分以上必须同时满足情节贴合、细节具体、人物语言可信、伏笔回收自然、语言错误很少。
+
+sentence_issues 至少 5 条、最多 8 条,每条落到具体原句;issue 要说明为什么扣分,suggestion 只给修改方向,不得直接给改后英文句子。`,
       },
       {
         role: 'user',
@@ -1223,9 +1697,476 @@ async function rediagnose() {
       <p class="text-sm font-serif-cn" style="color:var(--ink-soft);">${escapeHtml(data.overall || '')}</p>
     `;
     state.diagnosis = data;
+    recordSecondDiagnosis(data, revised);
+    renderArchive();
+    renderDashboard();
   } catch (e) {
     out.querySelector('#rediagnose-content').innerHTML = `<p class="text-sm" style="color:var(--vermillion);">第二轮诊断失败:${e.message}</p>`;
   }
+}
+
+/* ============================================================
+   范文库 / 成长档案 / 教师看板
+============================================================ */
+function renderModelLibrary() {
+  const host = document.getElementById('model-library-cards');
+  if (!host) return;
+  const select = document.getElementById('library-tier');
+  const tier = Number(select?.value || 5);
+  const list = MODEL_LIBRARY[tier] || MODEL_LIBRARY[5];
+  host.innerHTML = list.map(item => `
+    <div class="model-card">
+      <div class="flex items-center justify-between gap-2 mb-3">
+        <span class="badge badge-gold">${escapeHtml(item.score)}</span>
+        <span class="text-xs" style="color:var(--ink-muted);">AI生成参照</span>
+      </div>
+      <h4 class="font-serif-cn text-base font-bold mb-3" style="color:var(--ink);">${escapeHtml(item.title)}</h4>
+      <p class="text-sm italic mb-3" style="color:var(--ink-soft); line-height:1.75;">“${escapeHtml(item.text)}”</p>
+      <div class="rule-line my-3"></div>
+      <p class="text-[13px] mb-2" style="color:var(--ink-soft);"><strong style="color:var(--ink);">评分说明:</strong> ${escapeHtml(item.comment)}</p>
+      <p class="text-[13px]" style="color:var(--ink-soft);"><strong style="color:var(--ink);">可迁移策略:</strong> ${escapeHtml(item.imitate)}</p>
+    </div>
+  `).join('');
+}
+
+function useCurrentTierForLibrary() {
+  const select = document.getElementById('library-tier');
+  if (!select) return;
+  const currentTier = state.diagnosis?.tier || 4;
+  select.value = String(Math.min(5, currentTier + 1));
+  renderModelLibrary();
+}
+
+function getWorkMeta() {
+  return {
+    studentId: document.getElementById('student-id')?.value.trim() || '匿名学生',
+    className: document.getElementById('class-id')?.value.trim() || '未命名班级',
+    title: document.getElementById('training-title')?.value.trim() || '读后续写训练',
+  };
+}
+
+function diagnosisToRecordScore(data, text) {
+  return {
+    total: Number(data.total || 0),
+    tier: Number(data.tier || 0),
+    level: data.level || '',
+    scores: {
+      rapport: Number(data.scores?.rapport || 0),
+      richness: Number(data.scores?.richness || 0),
+      accuracy: Number(data.scores?.accuracy || 0),
+      coherence: Number(data.scores?.coherence || 0),
+    },
+    issues: (data.sentence_issues || []).map(i => i.issue).filter(Boolean).slice(0, 5),
+    strengths: data.strengths || [],
+    overall: data.overall || '',
+    text: text || '',
+  };
+}
+
+function recordFirstDiagnosis(data, text) {
+  const meta = getWorkMeta();
+  let record = state.currentRecordId ? findRecord(state.currentRecordId) : null;
+  if (!record) {
+    record = {
+      id: `live-${Date.now()}`,
+      displayId: meta.studentId,
+      className: meta.className,
+      title: meta.title,
+      date: new Date().toISOString().slice(0, 10),
+      notes: '课堂实时生成档案,可导出Word报告。',
+    };
+    state.records.unshift(record);
+    state.currentRecordId = record.id;
+  }
+  record.displayId = meta.studentId;
+  record.className = meta.className;
+  record.title = meta.title;
+  record.first = diagnosisToRecordScore(data, text);
+  record.second = null;
+  persistRecords();
+  renderRecordPicker();
+}
+
+function recordSecondDiagnosis(data, text) {
+  const record = state.currentRecordId ? findRecord(state.currentRecordId) : null;
+  if (!record) return;
+  record.second = diagnosisToRecordScore(data, text);
+  record.notes = buildAutoNote(record);
+  persistRecords();
+  renderRecordPicker();
+}
+
+function buildAutoNote(record) {
+  if (!record.first || !record.second) return record.notes || '';
+  const delta = record.second.total - record.first.total;
+  const best = getRecordBestGrowth(record);
+  return `二稿总分提升 ${delta.toFixed(1)} 分,提升最明显维度为${best.label}。`;
+}
+
+function findRecord(id) {
+  return state.records.find(r => r.id === id);
+}
+
+function recordDisplayName(record) {
+  return `${record.displayId || record.id} · ${record.className || '未命名班级'} · ${record.title || '读后续写训练'}`;
+}
+
+function renderRecordPicker() {
+  const picker = document.getElementById('record-picker');
+  if (!picker) return;
+  const current = state.currentRecordId || '';
+  picker.innerHTML = [
+    '<option value="">新建学生档案</option>',
+    ...state.records.map(r => `<option value="${escapeHtml(r.id)}">${escapeHtml(recordDisplayName(r))}</option>`)
+  ].join('');
+  picker.value = current;
+}
+
+function selectInitialRecord() {
+  if (!state.currentRecordId && state.records[0]) {
+    selectRecord(state.records[0].id);
+  }
+}
+
+function selectRecord(id) {
+  state.currentRecordId = id || null;
+  const record = id ? findRecord(id) : null;
+  if (record) {
+    document.getElementById('student-id').value = record.displayId || record.id || '';
+    document.getElementById('class-id').value = record.className || '';
+    document.getElementById('training-title').value = record.title || '';
+    document.getElementById('student-text').value = record.first?.text || '';
+    document.getElementById('revised-text').value = record.second?.text || '';
+    updateWordCount();
+  } else {
+    startNewRecord(true);
+  }
+  renderRecordPicker();
+}
+
+function startNewRecord(clearText = true) {
+  state.currentRecordId = null;
+  const next = state.records.length + 1;
+  document.getElementById('student-id').value = `A${String(next).padStart(2, '0')}`;
+  document.getElementById('class-id').value = document.getElementById('class-id').value || '高二1班';
+  document.getElementById('training-title').value = document.getElementById('training-title').value || '读后续写训练';
+  if (clearText) {
+    document.getElementById('student-text').value = '';
+    document.getElementById('revised-text').value = '';
+    updateWordCount();
+  }
+  renderRecordPicker();
+}
+
+function renderArchive() {
+  const host = document.getElementById('record-list');
+  if (!host) return;
+  const records = state.records;
+  const completed = records.filter(r => r.first && r.second);
+  const avgDelta = average(completed.map(r => r.second.total - r.first.total));
+  const rate = records.length ? Math.round(completed.length / records.length * 100) : 0;
+  const bestDim = getBestGrowthDimension(records);
+
+  document.getElementById('archive-count').textContent = records.length;
+  document.getElementById('archive-delta').textContent = avgDelta.toFixed(1);
+  document.getElementById('archive-rate').textContent = `${rate}%`;
+  document.getElementById('archive-best-dim').textContent = bestDim?.label || '—';
+
+  host.innerHTML = records.map(renderRecordCard).join('');
+  renderRecordPicker();
+}
+
+function renderRecordCard(record) {
+  const first = record.first || {};
+  const second = record.second || null;
+  const delta = second ? second.total - first.total : 0;
+  const deltaText = second ? `${delta >= 0 ? '+' : ''}${delta.toFixed(1)}` : '待二改';
+  const scoreRows = DIMENSIONS.map(dim => {
+    const a = Number(first.scores?.[dim.key] || 0);
+    const b = second ? Number(second.scores?.[dim.key] || 0) : 0;
+    return `
+      <div>
+        <div class="flex items-center justify-between text-xs mb-1" style="color:var(--ink-muted);">
+          <span>${dim.label}</span><span>${a.toFixed(1)}${second ? ` → ${b.toFixed(1)}` : ''}</span>
+        </div>
+        <div class="mini-bar"><span style="width:${Math.min(100, (second ? b : a) / 6.25 * 100)}%;"></span></div>
+      </div>`;
+  }).join('');
+  const issueTags = (first.issues || []).map(i => `<span class="issue-tag">${escapeHtml(i)}</span>`).join('');
+  return `
+    <div class="record-row">
+      <div class="flex flex-wrap items-start justify-between gap-3">
+        <div>
+          <div class="flex flex-wrap items-center gap-2 mb-2">
+            <span class="badge badge-gold">${escapeHtml(record.className || '')}</span>
+            <span class="badge badge-navy">写作记录</span>
+          </div>
+          <h3 class="font-serif-cn text-lg font-bold" style="color:var(--ink);">${escapeHtml(record.displayId || record.id)} · ${escapeHtml(record.title || '')}</h3>
+          <p class="text-xs mt-1" style="color:var(--ink-muted);">${escapeHtml(record.date || '')}</p>
+        </div>
+        <div class="text-right">
+          <div class="text-xs" style="color:var(--ink-muted);">初稿 / 二稿 / 提升</div>
+          <div class="font-display text-3xl tnum" style="color:var(--vermillion);">${(first.total || 0).toFixed(1)}${second ? ` → ${second.total.toFixed(1)}` : ''}</div>
+          <div class="badge ${delta >= 0 ? 'badge-jade' : 'badge-vermillion'}">${deltaText}</div>
+        </div>
+      </div>
+      <div class="grid grid-cols-1 md:grid-cols-4 gap-3 mt-4">${scoreRows}</div>
+      <div class="mt-4">${issueTags || '<span class="text-xs" style="color:var(--ink-muted);">暂无问题标签</span>'}</div>
+      <p class="text-sm mt-3" style="color:var(--ink-soft);">${escapeHtml(record.notes || '')}</p>
+      <div class="mt-4 flex flex-wrap gap-2">
+        <button onclick="downloadWordReport('${record.id}')" class="btn-ghost px-4 py-2 rounded text-sm">导出该生Word报告</button>
+      </div>
+    </div>`;
+}
+
+function renderDashboard() {
+  const summary = document.getElementById('dashboard-summary');
+  if (!summary) return;
+  const records = state.records;
+  const completed = records.filter(r => r.first && r.second);
+  const avgFirst = average(records.map(r => r.first?.total).filter(isFiniteNumber));
+  const avgSecond = average(completed.map(r => r.second.total));
+  const avgDelta = average(completed.map(r => r.second.total - r.first.total));
+  const rate = records.length ? Math.round(completed.length / records.length * 100) : 0;
+  const weak = getWeakestDimension(records);
+
+  summary.innerHTML = [
+    metricHtml('班级初稿均分', avgFirst.toFixed(1), '/25'),
+    metricHtml('二稿均分', avgSecond.toFixed(1), '/25', 'var(--jade)'),
+    metricHtml('平均提升', `+${avgDelta.toFixed(1)}`, '分', 'var(--gold)'),
+    metricHtml('最薄弱维度', weak?.label || '—', '', 'var(--navy)', true),
+  ].join('');
+
+  const firstAvg = dimensionAverage(records, 'first');
+  const secondAvg = dimensionAverage(completed, 'second');
+  document.getElementById('dashboard-dimensions').innerHTML = DIMENSIONS.map(dim => {
+    const a = firstAvg[dim.key] || 0;
+    const b = secondAvg[dim.key] || 0;
+    const gain = b - a;
+    return `
+      <div>
+        <div class="flex items-center justify-between text-sm mb-1">
+          <span style="color:var(--ink);">${dim.label}</span>
+          <span class="tnum" style="color:var(--ink-muted);">初稿 ${a.toFixed(1)} · 二稿 ${b.toFixed(1)} · ${gain >= 0 ? '+' : ''}${gain.toFixed(1)}</span>
+        </div>
+        <div class="mini-bar"><span style="width:${Math.min(100, a / 6.25 * 100)}%;"></span></div>
+      </div>`;
+  }).join('');
+
+  const issues = collectIssueTags(records).slice(0, 10);
+  document.getElementById('dashboard-issues').innerHTML = issues.map(item => `
+    <span class="issue-tag">${escapeHtml(item.label)} <strong class="tnum">${item.count}</strong></span>
+  `).join('') || '<p class="text-sm" style="color:var(--ink-muted);">暂无问题标签。</p>';
+}
+
+function metricHtml(label, value, suffix = '', color = 'var(--vermillion)', textMode = false) {
+  return `
+    <div class="metric-card" style="border-left-color:${color};">
+      <div class="metric-label">${label}</div>
+      <div class="${textMode ? 'text-lg font-semibold' : 'metric-value'}" style="color:var(--ink);">${value}<span class="text-sm ml-1" style="color:var(--ink-muted);">${suffix}</span></div>
+    </div>`;
+}
+
+async function generateLecturePlan() {
+  renderDashboard();
+  const records = state.records;
+  const weak = getWeakestDimension(records);
+  const issues = collectIssueTags(records).slice(0, 4);
+  const best = getBestGrowthDimension(records);
+  const fifth = MODEL_LIBRARY[5][0];
+  const output = document.getElementById('lecture-output');
+  output.classList.remove('hidden');
+  output.innerHTML = '<p class="ai-thinking text-sm" style="color:var(--ink-muted);">正在生成讲评方案</p>';
+  let localPrefix = '';
+
+  if (state.apiKey) {
+    try {
+      const aiPlan = await callDeepSeek([
+        {
+          role: 'system',
+          content: `你是一位高中英语读后续写教研组长。请根据班级写作数据生成一份课堂讲评方案,用中文输出,不要输出英文完整续写。结构必须包括:本次讲评目标、共性问题、20分钟讲评流程、投屏范例使用建议、课后任务。语言要像真实教研建议,具体、可执行。`,
+        },
+        {
+          role: 'user',
+          content: `【班级数据】
+班级初稿均分:${average(records.map(r => r.first?.total).filter(isFiniteNumber)).toFixed(1)}
+二稿均分:${average(records.filter(r => r.first && r.second).map(r => r.second.total)).toFixed(1)}
+最薄弱维度:${weak?.label || '内容丰富性'}
+提升最明显维度:${best?.label || '内容丰富性'}
+高频问题:${issues.map(i => `${i.label}(${i.count}人次)`).join('、')}
+
+请生成课堂讲评方案。`,
+        },
+      ], { temperature: 0.4, maxTokens: 1800 });
+      output.innerHTML = `<div class="markdown-output">${renderMarkdown(aiPlan)}</div>`;
+      return;
+    } catch (e) {
+      localPrefix = `<p class="text-sm mb-3" style="color:var(--vermillion);">AI 讲评生成失败,已切换为本地规则方案:${escapeHtml(e.message)}</p>`;
+    }
+  }
+
+  output.innerHTML = localPrefix + `
+    <div class="markdown-output">
+      <h3>本次讲评目标</h3>
+      <p>围绕<strong>${escapeHtml(weak?.label || '内容丰富性')}</strong>展开,让学生把“抽象评价”转化为可执行的改写动作。</p>
+      <h3>共性问题</h3>
+      <ul>${issues.map(i => `<li>${escapeHtml(i.label)}: ${i.count} 人次出现,建议用原文伏笔和具体动作进行二次修改。</li>`).join('')}</ul>
+      <h3>20分钟讲评流程</h3>
+      <ol>
+        <li>3分钟:展示班级四维均分,明确本次最薄弱维度是${escapeHtml(weak?.label || '内容丰富性')}。</li>
+        <li>6分钟:选取一处典型空泛句,引导学生补“动作、心理、物象”三类细节。</li>
+        <li>6分钟:对照高一档范文,分析为什么它更融洽、更有画面感。</li>
+        <li>5分钟:学生用同一策略修改自己作文中的一个句子,完成即时二改。</li>
+      </ol>
+      <h3>可投屏范例</h3>
+      <p><em>${escapeHtml(fifth.text)}</em></p>
+      <p><strong>课后任务:</strong>每名学生提交一份“初稿问题清单 + 二稿修改说明”,教师只抽查${escapeHtml(best?.label || '提升最大维度')}提升最明显的作品进行展示。</p>
+    </div>`;
+}
+
+function downloadCurrentWordReport() {
+  const record = state.currentRecordId ? findRecord(state.currentRecordId) : (findRecord('A04') || state.records[0]);
+  if (!record) { alert('暂无可导出的档案'); return; }
+  downloadWordReport(record.id);
+}
+
+function downloadWordReport(recordId) {
+  const record = findRecord(recordId);
+  if (!record) return;
+  const html = buildWordHtml(record);
+  const name = `${record.displayId || record.id}_读后续写成长报告.doc`;
+  downloadBlob(name, html, 'application/msword;charset=utf-8');
+}
+
+function buildWordHtml(record) {
+  const first = record.first || {};
+  const second = record.second || null;
+  const delta = second ? second.total - first.total : 0;
+  const rows = DIMENSIONS.map(dim => `
+    <tr>
+      <td>${escapeHtml(dim.label)}</td>
+      <td>${Number(first.scores?.[dim.key] || 0).toFixed(1)}</td>
+      <td>${second ? Number(second.scores?.[dim.key] || 0).toFixed(1) : '—'}</td>
+      <td>${second ? (Number(second.scores?.[dim.key] || 0) - Number(first.scores?.[dim.key] || 0)).toFixed(1) : '—'}</td>
+    </tr>`).join('');
+  const issues = (first.issues || []).map(i => `<li>${escapeHtml(i)}</li>`).join('');
+  return `<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>续见写作成长报告</title>
+<style>
+body { font-family: "Microsoft YaHei", Arial, sans-serif; color:#1a1d24; line-height:1.65; }
+h1 { font-size:24px; }
+h2 { font-size:18px; border-bottom:1px solid #999; padding-bottom:4px; }
+table { border-collapse:collapse; width:100%; margin:12px 0; }
+td, th { border:1px solid #999; padding:8px; }
+.muted { color:#666; }
+</style>
+</head>
+<body>
+<h1>“续见”高中英语读后续写成长报告</h1>
+<p class="muted">学生编号:${escapeHtml(record.displayId || record.id)}　班级:${escapeHtml(record.className || '')}　训练主题:${escapeHtml(record.title || '')}　日期:${escapeHtml(record.date || '')}</p>
+<h2>一、总体表现</h2>
+<p>初稿总分:${Number(first.total || 0).toFixed(1)}/25。${second ? `二稿总分:${Number(second.total || 0).toFixed(1)}/25,提升${delta.toFixed(1)}分。` : '尚未完成二稿诊断。'}</p>
+<h2>二、四维评分变化</h2>
+<table>
+<tr><th>评分维度</th><th>初稿</th><th>二稿</th><th>提升</th></tr>
+${rows}
+</table>
+<h2>三、主要问题</h2>
+<ul>${issues || '<li>暂无记录</li>'}</ul>
+<h2>四、AI诊断总评</h2>
+<p>${escapeHtml(first.overall || record.notes || '该生已完成读后续写诊断与改稿记录。')}</p>
+<h2>五、教师建议</h2>
+<p>${escapeHtml(record.notes || '建议继续围绕“原文融洽度、内容丰富性、语言准确性、上下文连贯性”开展二次修改。')}</p>
+<p class="muted">说明:本报告由“续见”智能体根据学生匿名写作数据自动生成,用于形成性评价与教学诊断。</p>
+</body>
+</html>`;
+}
+
+function downloadClassCsv() {
+  const header = ['学生编号','班级','训练主题','初稿总分','二稿总分','提升','初稿档位','二稿档位','主要问题'];
+  const rows = state.records.map(r => {
+    const first = r.first || {};
+    const second = r.second || {};
+    return [
+      r.displayId || r.id,
+      r.className || '',
+      r.title || '',
+      first.total ?? '',
+      second.total ?? '',
+      second.total ? (second.total - first.total).toFixed(1) : '',
+      first.tier ?? '',
+      second.tier ?? '',
+      (first.issues || []).join('、')
+    ].map(csvCell).join(',');
+  });
+  downloadBlob('续见_班级写作数据.csv', '\ufeff' + [header.join(','), ...rows].join('\n'), 'text/csv;charset=utf-8');
+}
+
+function downloadBlob(filename, content, type) {
+  const blob = new Blob([content], { type });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = filename;
+  document.body.appendChild(a);
+  a.click();
+  a.remove();
+  setTimeout(() => URL.revokeObjectURL(url), 500);
+}
+
+function csvCell(v) {
+  const s = String(v ?? '');
+  return `"${s.replace(/"/g, '""')}"`;
+}
+
+function average(nums) {
+  const clean = nums.filter(isFiniteNumber);
+  if (!clean.length) return 0;
+  return clean.reduce((a, b) => a + b, 0) / clean.length;
+}
+
+function isFiniteNumber(n) {
+  return Number.isFinite(Number(n));
+}
+
+function dimensionAverage(records, stage) {
+  const result = {};
+  DIMENSIONS.forEach(dim => {
+    result[dim.key] = average(records.map(r => r[stage]?.scores?.[dim.key]).filter(isFiniteNumber));
+  });
+  return result;
+}
+
+function getWeakestDimension(records) {
+  const avg = dimensionAverage(records, 'first');
+  return DIMENSIONS.map(dim => ({ ...dim, value: avg[dim.key] || 0 })).sort((a, b) => a.value - b.value)[0];
+}
+
+function getBestGrowthDimension(records) {
+  const completed = records.filter(r => r.first && r.second);
+  if (!completed.length) return null;
+  const firstAvg = dimensionAverage(completed, 'first');
+  const secondAvg = dimensionAverage(completed, 'second');
+  return DIMENSIONS.map(dim => ({ ...dim, value: (secondAvg[dim.key] || 0) - (firstAvg[dim.key] || 0) })).sort((a, b) => b.value - a.value)[0];
+}
+
+function getRecordBestGrowth(record) {
+  if (!record.first || !record.second) return DIMENSIONS[0];
+  return DIMENSIONS.map(dim => ({
+    ...dim,
+    value: (record.second.scores?.[dim.key] || 0) - (record.first.scores?.[dim.key] || 0)
+  })).sort((a, b) => b.value - a.value)[0];
+}
+
+function collectIssueTags(records) {
+  const counts = {};
+  records.forEach(r => (r.first?.issues || []).forEach(issue => {
+    counts[issue] = (counts[issue] || 0) + 1;
+  }));
+  return Object.entries(counts).map(([label, count]) => ({ label, count })).sort((a, b) => b.count - a.count);
 }
 
 /* ============================================================
@@ -1233,6 +2174,16 @@ async function rediagnose() {
 ============================================================ */
 function getDemoResponse(key) {
   const demos = {
+    context: `人物关系: 叙述者是赶车的旅客,Gunter 是出租车司机。两人原本陌生,但 Gunter 多次主动帮助叙述者,关系从服务关系转向信任关系。
+
+核心冲突: 叙述者必须赶上最后一班去 Prague 的巴士,却因无现金、银行卡无法使用、取款机故障而陷入无助。
+
+情绪曲线: 焦急赶车 → 困惑求助 → 看到希望 → 再次绝望 → 被信任后的震动与感激 → 四天后兑现承诺并完成情感回响。
+
+伏笔线索: Gunter 主动打电话问路、停车追赶巴士、微笑安抚、叙述者承诺回 Vienna 后联系,都应在续写中得到回应。
+
+续写边界: 不宜突然安排夸张事故或大量新人物;重点应写 Gunter 如何用信任解决困境,以及叙述者如何在第二段兑现承诺并升华主题。`,
+
     guidance: `1. 当 Gunter 听到"现金机也坏了"时,他的第一反应可能是什么?是惊讶、为难还是温暖一笑?(suggested: a knowing smile / unhesitatingly)
 
 2. 在被陌生人信任的瞬间,"我"的内心会经历怎样的转变?(从急切/绝望 → 不可置信 → 感激)
@@ -1248,8 +2199,8 @@ function getDemoResponse(key) {
 7. 在两段中分别埋一个伏笔与呼应:第一段的小细节(如电话号码写在纸上)如何在第二段被重新提及?`,
     
     diagnose: JSON.stringify({
-      scores: { rapport: 4.8, richness: 4.2, accuracy: 5.0, coherence: 4.5 },
-      total: 18.5,
+      scores: { rapport: 4.3, richness: 3.7, accuracy: 4.6, coherence: 4.2 },
+      total: 16.8,
       level: '第四档(16-20分)',
       tier: 4,
       strengths: [
@@ -1261,35 +2212,41 @@ function getDemoResponse(key) {
         {
           sentence: 'He listened carefully and his face showed a kind smile.',
           dimension: 'richness',
-          issue: '动作描写过于简单,缺乏具体细节,未能凸显 Gunter 此刻的人物魅力',
-          suggestion: '可加入更具体的微表情或动作:如 "leaning forward" / "patting my shoulder",让"善良"被"看见"而非被"陈述"'
+          issue: '动作描写过于简单,只是概括他“kind”,没有让读者看到他怎样观察、停顿或主动想办法',
+          suggestion: '补一个可见动作或微表情,例如看向即将发车的巴士、停顿思考、把联系方式递给“我”;重点是让善良通过动作呈现'
         },
         {
           sentence: '"Don\'t worry," he said softly. "Just take the bus first. You can pay me when you come back to Vienna."',
           dimension: 'rapport',
-          issue: '直接陈述解决方案,与原文"先有曲折再有温暖"的情绪节奏略不匹配',
-          suggestion: '考虑在 Gunter 给出方案前加一个停顿/思考的瞬间,更符合原文中他"翻找电话""指向取款机"等"主动想办法"的人物特征'
+          issue: '解决方案出现得太快,缺少原文中“不断想办法”的过程感,情绪从绝望到被信任的转折不够有力度',
+          suggestion: '在他说出解决办法前加入短暂停顿、观察车队或快速权衡,让“信任”成为一个有分量的选择'
         },
         {
           sentence: 'I was very surprised by his words.',
           dimension: 'accuracy',
-          issue: '"very surprised" 表达直白,词汇丰富度偏低,与全文情感强度不匹配',
-          suggestion: '替换为更精准的表达,如 "stunned" / "taken aback" / "lost for words",并可补充具体心理描写'
+          issue: '“very surprised”表达直白,不能充分呈现被陌生人信任时的震动、羞愧和感激交织',
+          suggestion: '把抽象情绪拆成身体反应或心理变化,如一时说不出话、手里攥着纸条、内心由慌乱转为感激'
         },
         {
           sentence: 'From that day on, we became good friends.',
           dimension: 'coherence',
-          issue: '段间过渡跳跃过快,从"还钱+礼物"直接跳到"成为朋友",缺少情感累积的过程',
-          suggestion: '中间补充一两句对话或共同经历的细节,让"友情形成"显得自然而非概括性陈述'
+          issue: '从“还钱+礼物”直接跳到“成为朋友”,情感关系推进过快,缺少让友情自然形成的具体场景',
+          suggestion: '补一两句简短对话或共同回忆,让第二段不仅完成还钱,还完成“信任被兑现”的情感闭环'
         },
         {
           sentence: 'His kindness made me believe that there is still trust and warmth between strangers in this busy world.',
           dimension: 'richness',
-          issue: '收尾立意正确但表达较为常规,缺乏"独属于这个故事"的画面感',
-          suggestion: '尝试用一个具体意象收尾,如把 Gunter 的微笑、电话号码的纸片、维也纳的雨夜等作为情感载体,而非直接抒情'
+          issue: '收尾立意正确但表达模板化,缺少“独属于这个故事”的画面,因此感染力和记忆点不足',
+          suggestion: '用一个具体意象收束,如电话号码纸片、维也纳雨夜、出租车后座等,让主题藏在画面里'
+        },
+        {
+          sentence: 'He came to pick me up at the airport with the same warm smile.',
+          dimension: 'rapport',
+          issue: '第二段又让 Gunter 到机场接人,情节略显方便化,与“还钱兑现承诺”的核心任务相比有些分散',
+          suggestion: '把重心放在“我如何主动联系并兑现承诺”,地点和行动可以更简洁,避免新情节抢走原文主题'
         }
       ],
-      overall: '续写紧扣原文"信任"主题,情节完整、结构清晰,语言基本准确,属于第四档中等水平。主要短板在于细节描写偏简、情感推进略显平直,优化空间集中在"内容丰富性"与"段间过渡"两个维度。',
+      overall: '续写能围绕“信任”主题完成基本情节,语言总体准确,但细节描写、情绪转折和结尾画面感还不够。按高考读后续写标准,目前属于第四档偏低到中段,不宜给到20分以上。',
     }),
     
     scaffold: `### 问题定位清单
@@ -1321,17 +2278,17 @@ function getDemoResponse(key) {
 4. **结尾改造**:抛弃 "His kindness made me believe..." 这类直陈,改用具体物象作为情感载体。可参考"每当...我就想起..."的句式结构,把抽象信任锚定在某个画面上。`,
     
     rediagnose: JSON.stringify({
-      scores: { rapport: 5.4, richness: 5.2, accuracy: 5.3, coherence: 5.1 },
-      total: 21.0,
-      level: '第五档(21-25分)',
-      tier: 5,
+      scores: { rapport: 5.0, richness: 4.8, accuracy: 4.9, coherence: 4.7 },
+      total: 19.4,
+      level: '第四档(16-20分)',
+      tier: 4,
       strengths: [
         '段一通过"glanced at the bus"等具体动作让 Gunter 的善意"被看见"',
         '结尾用"the receipt with his number"作为具体意象,情感收束有画面感',
         '段间过渡新增的对话场景使友情形成更自然'
       ],
       sentence_issues: [],
-      overall: '修改稿在"内容丰富性"与"上下文连贯性"两个维度提升明显,从第四档进入第五档。细节描写更具张力,情感推进更显层次。',
+      overall: '修改稿在“内容丰富性”和“上下文连贯性”两个维度提升明显,细节更具体,情感推进更自然。整体已接近第四档高段,若语言再凝练、结尾意象再含蓄,有机会冲击第五档。',
     }),
   };
   return demos[key] || '(演示模式: 未匹配示例)';

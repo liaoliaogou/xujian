@@ -936,6 +936,7 @@ const DIMENSIONS = [
 
 const STORAGE_KEY = 'xujian-v2-writing-records';
 const API_KEY_STORAGE_KEY = 'xujian-v2-deepseek-key';
+const DEFAULT_API_KEY = 'sk-86c3756ce6974c5e8b6d65ba9d237bd2';
 
 const MODEL_LIBRARY = {
   3: [
@@ -1086,9 +1087,9 @@ function persistRecords() {
 
 function loadStoredApiKey() {
   try {
-    return localStorage.getItem(API_KEY_STORAGE_KEY) || '';
+    return localStorage.getItem(API_KEY_STORAGE_KEY) || DEFAULT_API_KEY;
   } catch {
-    return '';
+    return DEFAULT_API_KEY;
   }
 }
 
@@ -1984,7 +1985,14 @@ async function generateLecturePlan() {
       const aiPlan = await callDeepSeek([
         {
           role: 'system',
-          content: `你是一位高中英语读后续写教研组长。请根据班级写作数据生成一份课堂讲评方案,用中文输出,不要输出英文完整续写。结构必须包括:本次讲评目标、共性问题、20分钟讲评流程、投屏范例使用建议、课后任务。语言要像真实教研建议,具体、可执行。`,
+          content: `你是一位高中英语读后续写教研组长。请根据班级写作数据生成一份给授课教师使用的课堂讲评方案,用中文输出,不要输出英文完整续写。
+
+写作要求:
+1. 方案的使用者是授课教师,不是学生群体;不要写“老师们”“同学们”等称呼。
+2. 语气要像教案/教研建议,用“教师先……”“组织学生……”“引导学生……”这类表达。
+3. 结构必须包括:本次讲评目标、共性问题、20分钟讲评流程、投屏范例使用建议、课后任务。
+4. 每一部分都要具体到课堂动作,让教师知道怎么上这节讲评课。
+5. 不要直接给学生一篇完整英文续写。`,
         },
         {
           role: 'user',
